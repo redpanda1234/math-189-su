@@ -1,0 +1,8 @@
+macros.tex
+*.aux
+*.out
+*.log
+*.pre
+*starter*
+auto/
+*_region_.tex
