@@ -44,7 +44,7 @@
       \item Let $\sigma(x) = \frac{1}{1 + e^{-x}}$ be the sigmoid
         function. Show that
         \[
-          \sigma'(x) = \sigma(x)\left[1 - \sigma(x)\right].
+          \sigma'(x) = \sigma(x)\bk{1 - \sigma(x)}
         \]
       \item Using the previous result and the chain rule of calculus,
         derive an expression for the gradient of the log likelihood
@@ -60,7 +60,7 @@
 
   \hrulefill
 
-  \section*{Solution}
+  \section*{Solution:}
 
   \clearpage
 
@@ -70,13 +70,13 @@
     Derive the normalization constant ($Z$) for a one dimensional
     zero-mean Gaussian
     \[
-      \PP(x; \sigma^2) = \frac{1}{Z}\exp\left(-\frac{x^2}{2\sigma^2}\right)
+      \PP(x; \sigma^2) = \frac{1}{Z}\exp\pn{-\frac{x^2}{2\sigma^2}}
     \]
     such that $\PP(x; \sigma^2)$ becomes a valid density.
 
   \hrulefill
 
-  \section*{Solution}
+  \section*{Solution:}
 
   \clearpage
 
@@ -161,6 +161,8 @@
 
   \hrulefill
 
-  \section*{Solution}
+  \clearpage
+
+  \section*{Solution:}
 
 \end{document}
