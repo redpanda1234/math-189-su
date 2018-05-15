@@ -1,0 +1,6 @@
+[submodule "machine-earnings"]
+	path = machine-earnings
+	url = https://github.com/redpanda1234/machine-earnings.git
+[submodule "midterm-project"]
+	path = machine-earnings
+	url = https://github.com/redpanda1234/machine-earnings.git
