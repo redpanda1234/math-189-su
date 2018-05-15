@@ -10,6 +10,7 @@
 
 \name{Forest Kobayashi}
 \class{Math of Big Data}
+\season{Summer}
 \prof{Gu}
 \assignment{1}
 \duedate{05/15/2018}
@@ -18,10 +19,11 @@
 \acknowledgements{{}, {}}
 \onTime{0}
 
-\comments{Feel free to work with other students, but make sure you
-  write up the homework and code on your own (no copying homework
-  \textit{or} code; no pair programming). Feel free to ask students or
-  instructors for help debugging code or whatever else, though.
+\comments{\textbf{Comments}: Feel free to work with other students,
+  but make sure you write up the homework and code on your own (no
+  copying homework \textit{or} code; no pair programming). Feel free
+  to ask students or instructors for help debugging code or whatever
+  else, though.
 
   The starter code for problem 2 part c and d can be found under the
   Resource tab on course website.
@@ -50,8 +52,95 @@
 
   \hrulefill
 
-  \section*{Solution}
-
+  \section*{Solution:}
+    \begin{enumerate}
+      \item We have
+        \begin{align*}
+          \EE\bk{\vy}
+          &= \EE\bk{A\vx + \vb} \\
+          &= \EE\bk{A\vx} + \EE\bk{\vb} \\
+          &= \EE\bk{A\vx} + \vb
+        \end{align*}
+        (we got from the second line to the third by the fact that
+        $\EE\bk{X + Y} = \EE\bk{X} + \EE\bk{Y}$ for random variables
+        $X$ and $Y$, and from the second to the third by the fact that
+        the expected value of a constant is the constant itself). It
+        remains to show that $\EE\bk{A\vx} = A\EE\bk{\vx}$. Suppose
+        $\vx$ is an $n$-dimensional random vector in a space $X$:
+        \[
+          \vx =
+          \begin{bmatrix}
+            x_0 \\
+            x_1 \\
+            \vdots \\
+            x_n
+          \end{bmatrix}
+        \]
+        where each of the $x_i \in \RR$. By definition, the
+        expectation value of $\vx$ is given by
+        \[
+          \EE\bk{\vx} =
+          \begin{bmatrix}
+            \EE\bk{x_0} \\
+            \EE\bk{x_1} \\
+            \vdots \\
+            \EE\bk{x_n}
+          \end{bmatrix}
+        \]
+        and for any continuous random variable, we have
+        \[
+          \EE\bk{Y} = \int_{-\infty}^\infty y f(y) \dd y
+        \]
+        where $f(y)$ is some probability density function. For each of
+        the $x_i$, define $f_i(x_i)$ to be the corresponding
+        probability density function. Then
+        \begin{align*}
+          \EE\bk{\vx}
+          &=
+            \begin{bmatrix}
+              \displaystyle\int_{-\infty}^\infty x_0 f_0(x_0) \dd x_0
+              \\[1em]
+              \displaystyle\int_{-\infty}^\infty x_1 f_1(x_1) \dd x_1
+              \\[1em]
+              \vdots \\[1em]
+              \displaystyle\int_{-\infty}^\infty x_n f_n(x_n) \dd x_n
+            \end{bmatrix}
+        \end{align*}
+        Let $A \in M_{m\times n}(\RR)$, with rows $\va_0$, $\va_1$,
+        $\ldots$, $\va_m$.
+        \begin{align*}
+          A\vx
+          &=
+            \begin{bmatrix}
+              a_{0,0} & a_{0,1} & \cdots & a_{0,n} \\
+              a_{1,0} & a_{1,1} & \cdots & a_{1,n} \\
+              \vdots & \vdots & \ddots & \vdots \\
+              a_{m,0} & a_{m,1} & \cdots & a_{m,n}
+            \end{bmatrix}
+            \begin{bmatrix}
+              x_0 \\
+              x_1 \\
+              \vdots \\
+              x_n
+            \end{bmatrix} \\
+          &=
+            \begin{bmatrix}
+              \ip{\va_0, \vx} \\
+              \ip{\va_1, \vx} \\
+              \vdots \\
+              \ip{\va_m, \vx}
+            \end{bmatrix}
+          \shortintertext{Using the standard Euclidean inner product,
+          we have}
+          &=
+            \begin{bmatrix}
+              \displaystyle \sum_{i=0}^n a_{0,i} x_i \\[1em]
+              \displaystyle \sum_{i=0}^n a_{1,i} x_i \\[1em]
+              \vdots \\[1em]
+              \displaystyle \sum_{i=0}^n a_{m,i} x_i
+            \end{bmatrix}
+        \end{align*}
+    \end{enumerate}
   \clearpage
 
 % --------------------------- Problem 2 ---------------------------- %
@@ -73,7 +162,7 @@
 
   \hrulefill
 
-  \section*{Solution}
+  \section*{Solution:}
 
 
 \end{document}
