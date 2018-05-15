@@ -96,20 +96,20 @@
             \EE\bk{X+Y}
             &= \int_{-\infty}^\infty \int_{-\infty}^\infty
               (x+y)f(x,y)\dd x \dd y \\
-            &= \int_{-\infty}^\infty
+            &= \int_{-\infty}^\infty \int_{-\infty}^\infty xf(x,y) \dd
+              x \dd y + \int_{-\infty}^\infty \int_{-\infty}^\infty
+              yf(x,y) \dd x \dd y \\
+            &= \EE\bk{X} + \EE\bk{Y}
           \end{align*}
         \end{proof}
+        Now we do the main problem. By the lemmas, we have
         \begin{align*}
           \EE\bk{\vy}
           &= \EE\bk{A\vx + \vb} \\
           &= \EE\bk{A\vx} + \EE\bk{\vb} \\
           &= \EE\bk{A\vx} + \vb
         \end{align*}
-        (we got from the second line to the third by the fact that
-        $\EE\bk{X + Y} = \EE\bk{X} + \EE\bk{Y}$ for random variables
-        $X$ and $Y$, and from the second to the third by the fact that
-        the expected value of a constant is the constant itself). It
-        remains to show that $\EE\bk{A\vx} = A\EE\bk{\vx}$. Suppose
+        It remains to show that $\EE\bk{A\vx} = A\EE\bk{\vx}$. Suppose
         $\vx$ is an $n$-dimensional random vector in a space $X$:
         \[
           \vx =
@@ -131,25 +131,25 @@
             \EE\bk{x_n}
           \end{bmatrix}
         \]
-        and for any continuous random variable, we have
-        \[
-          \EE\bk{Y} = \int_{-\infty}^\infty y f(y) \dd y
-        \]
-        where $f(y)$ is some probability density function. For each of
-        the $x_i$, define $f_i(x_i)$ to be the corresponding
-        probability density function. Then
-        \begin{align*}
-          \EE\bk{\vx}
-          &=
-            \begin{bmatrix}
-              \displaystyle\int_{-\infty}^\infty x_0 f_0(x_0) \dd x_0
-              \\[1em]
-              \displaystyle\int_{-\infty}^\infty x_1 f_1(x_1) \dd x_1
-              \\[1em]
-              \vdots \\[1em]
-              \displaystyle\int_{-\infty}^\infty x_n f_n(x_n) \dd x_n
-            \end{bmatrix}
-        \end{align*}
+        % and for any continuous random variable, we have
+        % \[
+        %   \EE\bk{Y} = \int_{-\infty}^\infty y f(y) \dd y
+        % \]
+        % where $f(y)$ is some probability density function. For each of
+        % the $x_i$, define $f_i(x_i)$ to be the corresponding
+        % probability density function. Then
+        % \begin{align*}
+        %   \EE\bk{\vx}
+        %   &=
+        %     \begin{bmatrix}
+        %       \displaystyle\int_{-\infty}^\infty x_0 f_0(x_0) \dd x_0
+        %       \\[1em]
+        %       \displaystyle\int_{-\infty}^\infty x_1 f_1(x_1) \dd x_1
+        %       \\[1em]
+        %       \vdots \\[1em]
+        %       \displaystyle\int_{-\infty}^\infty x_n f_n(x_n) \dd x_n
+        %     \end{bmatrix}
+        % \end{align*}
         Let $A \in M_{m\times n}(\RR)$, with rows $\va_0$, $\va_1$,
         $\ldots$, $\va_m$. Then $A\EE\bk{\vx}$ is given by
         \begin{align*}
@@ -177,7 +177,7 @@
         \end{align*}
         Now, we manipulate this expression to obtain $\EE\bk{A\vx}$.
         Because the expected value of a sum is the sum of expected
-        values, we have
+        values (see lemmas), we have
         \begin{align*}
           \begin{bmatrix}
             \displaystyle\sum_{i=0}^n a_{0,i}\EE\bk{x_i} \\[1em]
@@ -207,9 +207,34 @@
               \vdots \\
               \displaystyle \sum_{i=0}^n a_{m,i} x_i
             \end{bmatrix}
-          }
+          } \\
+          &= \EE\bk{A\vx}
         \end{align*}
-      \item The covariance matrix $\cov\bk{\vy}$ is defined by
+        hence $A\EE\bk{\vx} = \EE\bk{A\vx}$, and so putting all the
+        pieces together,
+        \[
+          \boxed{\EE\bk{A\vx + \vb} = A\EE\bk{\vx} + \vb}
+        \]
+        as desired. \qed
+      \item
+        \begin{corollary}
+          Let $A$ be a matrix, and let $\vx$ be a random vector. Then
+          $\EE\bk{\vx A^\T} = \EE\bk{\vx}A^\T$.
+        \end{corollary}
+        \begin{proof}
+          Note that
+          \begin{align*}
+            \EE\bk{\vx A^\T}
+            &= \EE\bk{\pn{\pn{\vx A^\T}^\T}^\T} \\
+            &= \EE\bk{\pn{A \vx^\T}^\T} \\
+            &= \pn{\EE\bk{A\vx^\T}}^\T \\
+            &= \pn{A\EE\bk{\vx^\T}}^\T \\
+            &= \pn{\EE\bk{\vx^\T}}^\T A^\T \\
+            &= \EE\bk{\vx} A^\T
+          \end{align*}
+        \end{proof}
+        Now, we proceed to the main proof. The covariance matrix
+        $\cov\bk{\vy}$ is defined by
         \begin{align*}
           \cov\bk{\vy}
           &=
@@ -253,6 +278,56 @@
         thus, examining the matrix above, we see $\cov\bk{A\vx + \vb}
         = \cov\bk{A\vx}$. It remains to show $\cov{\bk{A\vx}} =
         A\cov\bk{\vx}A^\top$.
+
+        Note that we can reexpress the covariance matrix by
+        \begin{align*}
+          \cov\bk{y}
+          &=
+            \EE\bk{
+            \begin{bmatrix}
+              (y_0-\EE\bk{y_0})(y_0-\EE\bk{y_0})
+              & (y_0-\EE\bk{y_0})(y_1-\EE\bk{y_1})
+              & \cdots
+              & (y_0-\EE\bk{y_0})(y_n-\EE\bk{y_n}) \\[1em]
+              (y_1-\EE\bk{y_1})(y_0-\EE\bk{y_0})
+              & (y_1-\EE\bk{y_1})(y_1-\EE\bk{y_1})
+              &\cdots
+              & (y_1-\EE\bk{y_1})(y_n-\EE\bk{y_n}) \\[1em]
+              \vdots & \vdots & \ddots & \vdots \\[1em]
+              (y_n-\EE\bk{y_n})(y_0-\EE\bk{y_0})
+              & (y_n-\EE\bk{y_n})(y_1-\EE\bk{y_1})
+              & \cdots
+              & (y_n-\EE\bk{y_n})(y_n-\EE\bk{y_n})
+            \end{bmatrix}
+                }\\
+          &= \EE\bk{(\vy - \EE\bk{\vy})(\vy-\EE\bk{\vy})^\T} \\
+          &= \EE\bk{(A\vx - \EE\bk{A\vx})(A\vx-\EE\bk{A\vx})^\T}
+            \shortintertext{by part (a),}
+          &= \EE\bk{(A\vx - A\EE\bk{\vx})(A\vx - A\EE\bk{\vx})^\T}\\
+          &= \EE\bk{(A\vx - A\EE\bk{\vx})(\vx^\T A^\T - \EE\bk{\vx}^\T
+            A^\T)} \\
+          &= \EE\bk{A\pn{\vx- \EE\bk{\vx}}(\vx^\T - \EE\bk{\vx}^\T)
+            A^\T}\\
+          &= \EE\bk{A\pn{\vx- \EE\bk{\vx}}(\vx-\EE\bk{\vx})^\T
+            A^\T}\\
+          % &= \EE\bk{A\vx\vx^\T A^\T - A\vx\EE\bk{\vx}^\T A^\T
+          %   -A\EE\bk{\vx}\vx^\T A^\T + A\EE\bk{\vx}\EE\bk{\vx}^\T
+          %   A^\T} \\
+          % &= \EE\bk{A\pn{\vx \vx^\T - \vx \EE\bk{\vx}^\T -
+          %   \EE\bk{\vx}\vx^\T + \EE\bk{\vx}\EE\bk{\vx}^\T}A^\T} \\
+          % &= A\EE\bk{\pn{\vx \vx^\T - \vx \EE\bk{\vx}^\T -
+          %   \EE\bk{\vx}\vx^\T + \EE\bk{\vx}\EE\bk{\vx}^\T}A^\T} \\
+          % &= A\EE\bk{\pn{\vx \vx^\T - \vx \EE\bk{\vx}^\T -
+          %   \EE\bk{\vx}\vx^\T + \EE\bk{\vx}\EE\bk{\vx}^\T}}A^\T \\
+          &= A\EE\bk{\pn{\vx - \EE\bk{\vx}}\pn{\vx - \EE\bk{\vx}}^\T}
+            A^\T \\
+          &= A\cov\bk{\vx} A^\T = A \bm{\Sigma} A^\T
+        \end{align*}
+        hence, putting it all together, we have
+        \[
+          \boxed{\cov\bk{A\vx + \vb} = A\cov\bk{\vx}A^\T}
+        \]
+        \qed
     \end{enumerate}
   \clearpage
 
@@ -276,6 +351,6 @@
   \hrulefill
 
   \section*{Solution:}
-
+  My github username is \texttt{redpanda1234}.
 
 \end{document}
