@@ -16,7 +16,7 @@
 \duedate{05/15/2018}
 \dueday{Tuesday}
 \problems{1, 2}
-\acknowledgements{{}, {}}
+\acknowledgements{{Tim Player, Jacky Lee}, {}}
 \onTime{0}
 
 \comments{\textbf{Comments}: Feel free to work with other students,
@@ -54,7 +54,51 @@
 
   \section*{Solution:}
     \begin{enumerate}
-      \item We have
+      \item First, we prove some small lemmas.
+        \begin{lemma}
+          Let $X$ be a continuous random variable, and $a$ be a
+          scalar. Then $\EE\bk{aX}=a\EE\bk{X}$.
+        \end{lemma}
+        \begin{proof}
+          Let $X$ admit a density function $f(x)$. Then
+          \begin{align*}
+            \EE\bk{aX}
+            &= \int_{-\infty}^\infty axf(x) \dd x \\
+            &= a\int_{-\infty}^\infty xf(x) \dd x \\
+            &= a\EE\bk{X}
+          \end{align*}
+        \end{proof}
+        \begin{lemma}
+          Let $X$ be a random variable, and let $a$ be a scalar. Then
+          $\EE\bk{X+a}=\EE\bk{X}+\EE\bk{a}=\EE\bk{X}+a$.
+        \end{lemma}
+        \begin{proof}
+          Let $X$ admit a density function $f(x)$. Then over $\RR$,
+          $f(x)$ must integrate to 1. Hence
+          \begin{align*}
+            \int_{-\infty}^\infty (x+a)f(x) \dd x
+            &= \int_{-\infty}^\infty xf(x) + af(x) \dd x \\
+            &= \int_{-\infty}^\infty xf(x) \dd x +
+              \int_{-\infty}^\infty af(x) \dd x \\
+            &= \int_{-\infty}^\infty xf(x) \dd x +
+              a\int_{-\infty}^\infty f(x) \dd x \\
+            &= \EE\bk{X} + a\cdot 1 \\
+            &= \EE\bk{X} + a
+          \end{align*}
+        \end{proof}
+        \begin{lemma}
+          Let $X$ and $Y$ be continuous random variables. Then
+          $\EE\bk{X+Y} = \EE\bk{X}+\EE\bk{Y}$.
+        \end{lemma}
+        \begin{proof}
+          Let $X+Y$ have a density function $f(x,y)$. Then
+          \begin{align*}
+            \EE\bk{X+Y}
+            &= \int_{-\infty}^\infty \int_{-\infty}^\infty
+              (x+y)f(x,y)\dd x \dd y \\
+            &= \int_{-\infty}^\infty
+          \end{align*}
+        \end{proof}
         \begin{align*}
           \EE\bk{\vy}
           &= \EE\bk{A\vx + \vb} \\
@@ -107,9 +151,9 @@
             \end{bmatrix}
         \end{align*}
         Let $A \in M_{m\times n}(\RR)$, with rows $\va_0$, $\va_1$,
-        $\ldots$, $\va_m$.
+        $\ldots$, $\va_m$. Then $A\EE\bk{\vx}$ is given by
         \begin{align*}
-          A\vx
+          A\EE\bk{\vx}
           &=
             \begin{bmatrix}
               a_{0,0} & a_{0,1} & \cdots & a_{0,n} \\
@@ -118,28 +162,97 @@
               a_{m,0} & a_{m,1} & \cdots & a_{m,n}
             \end{bmatrix}
             \begin{bmatrix}
-              x_0 \\
-              x_1 \\
+              \EE\bk{x_0} \\
+              \EE\bk{x_1} \\
               \vdots \\
-              x_n
+              \EE\bk{x_n}
             \end{bmatrix} \\
           &=
             \begin{bmatrix}
-              \ip{\va_0, \vx} \\
-              \ip{\va_1, \vx} \\
-              \vdots \\
-              \ip{\va_m, \vx}
+              \displaystyle\sum_{i=0}^n a_{0,i}\EE\bk{x_i} \\[1em]
+              \displaystyle\sum_{i=0}^n a_{1,i}\EE\bk{x_i} \\[1em]
+              \vdots\\
+              \displaystyle\sum_{i=0}^n a_{n,i}\EE\bk{x_i}
             \end{bmatrix}
-          \shortintertext{Using the standard Euclidean inner product,
-          we have}
+        \end{align*}
+        Now, we manipulate this expression to obtain $\EE\bk{A\vx}$.
+        Because the expected value of a sum is the sum of expected
+        values, we have
+        \begin{align*}
+          \begin{bmatrix}
+            \displaystyle\sum_{i=0}^n a_{0,i}\EE\bk{x_i} \\[1em]
+            \displaystyle\sum_{i=0}^n a_{1,i}\EE\bk{x_i} \\[1em]
+            \vdots\\
+            \displaystyle\sum_{i=0}^n a_{n,i}\EE\bk{x_i}
+          \end{bmatrix}
           &=
+            \begin{bmatrix}
+              \displaystyle\EE\bk{\sum_{i=0}^n a_{0,i}x_i} \\[1.5em]
+              \displaystyle\EE\bk{\sum_{i=0}^n a_{1,i}x_i} \\[1.5em]
+              \vdots\\
+              \displaystyle\EE\bk{\sum_{i=0}^n a_{n,i}x_i}
+            \end{bmatrix}
+          \shortintertext{and now because the expected value of a
+          vector is a vector of expected values,}
+          \begin{bmatrix}
+            \displaystyle\EE\bk{\sum_{i=0}^n a_{0,i}x_i} \\[1.5em]
+            \displaystyle\EE\bk{\sum_{i=0}^n a_{1,i}x_i} \\[1.5em]
+            \vdots\\
+            \displaystyle\EE\bk{\sum_{i=0}^n a_{n,i}x_i}
+          \end{bmatrix}
+          &= \EE\bk{
             \begin{bmatrix}
               \displaystyle \sum_{i=0}^n a_{0,i} x_i \\[1em]
               \displaystyle \sum_{i=0}^n a_{1,i} x_i \\[1em]
-              \vdots \\[1em]
+              \vdots \\
               \displaystyle \sum_{i=0}^n a_{m,i} x_i
             \end{bmatrix}
+          }
         \end{align*}
+      \item The covariance matrix $\cov\bk{\vy}$ is defined by
+        \begin{align*}
+          \cov\bk{\vy}
+          &=
+            \begin{bmatrix}
+              \EE\bk[Big]{\pn{y_0 - \EE\bk{y_0}}\pn{y_0 - \EE\bk{y_0}}}
+              & \EE\bk[Big]{\pn{y_0 - \EE\bk{y_0}}\pn{y_1 - \EE\bk{y_1}}}
+              & \cdots
+              & \EE\bk[Big]{\pn{y_0 - \EE\bk{y_0}}\pn{y_n - \EE\bk{y_n}}}
+              \\[1em]
+              \EE\bk[Big]{\pn{y_1 - \EE\bk{y_1}}\pn{y_0 - \EE\bk{y_0}}}
+              & \EE\bk[Big]{\pn{y_1 - \EE\bk{y_1}}\pn{y_1 - \EE\bk{y_1}}}
+              & \cdots
+              & \EE\bk[Big]{\pn{y_1 - \EE\bk{y_1}}\pn{y_n - \EE\bk{y_n}}}
+              \\[1em]
+              \vdots & \vdots & \ddots & \vdots \\[1em]
+              \EE\bk[Big]{\pn{y_n - \EE\bk{y_n}}\pn{y_0 - \EE\bk{y_0}}}
+              & \EE\bk[Big]{\pn{y_n - \EE\bk{y_n}}\pn{y_1 - \EE\bk{y_1}}}
+              & \cdots
+              & \EE\bk[Big]{\pn{y_n - \EE\bk{y_n}}\pn{y_n - \EE\bk{y_n}}}
+            \end{bmatrix} \\
+          &=
+            \begin{bmatrix}
+              \cov\pn{y_0,y_0} & \cov\pn{y_0,y_1} & \cdots &
+              \cov\pn{y_0, y_n} \\
+              \cov\pn{y_1,y_0} & \cov\pn{y_1,y_1} & \cdots &
+              \cov\pn{y_1, y_n} \\
+              \vdots & \vdots & \ddots & \vdots \\
+              \cov\pn{y_n, y_0} & \cov\pn{y_n, y_1} & \cdots &
+              \cov\pn{y_n, y_n}
+            \end{bmatrix}
+        \end{align*}
+        it is a property of covariance that for all random variables
+        $X$ and $Y$, with scalars $a$ and $b$, $\cov\pn{X+a,Y+b} =
+        \cov\pn{X,Y}$. Hence, since each $y_i = (A\vx)_i + b_i$, then
+        $\forall i,j \in \set{0,1,\ldots,n}$,
+        \begin{align*}
+          \cov\bk{y_i,y_j}
+          &= \cov\bk{(A\vx)_i + b_i, (A\vx)_j + b_j} \\
+          &= \cov\bk{(A\vx)_i, (A\vx)_j}
+        \end{align*}
+        thus, examining the matrix above, we see $\cov\bk{A\vx + \vb}
+        = \cov\bk{A\vx}$. It remains to show $\cov{\bk{A\vx}} =
+        A\cov\bk{\vx}A^\top$.
     \end{enumerate}
   \clearpage
 
