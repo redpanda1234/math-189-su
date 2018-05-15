@@ -35,6 +35,12 @@
 
 \lfoot{Due Tuesday, May 15th 2018}
 
+\newenvironment{amatrix}[1]{%
+  \left[\begin{array}{@{}*{#1}{c}|c@{}}
+}{%
+  \end{array}\right]
+}
+
 \begin{document}
 
 % --------------------------- Problem 1 ---------------------------- %
@@ -216,7 +222,7 @@
           \boxed{\EE\bk{A\vx + \vb} = A\EE\bk{\vx} + \vb}
         \]
         as desired. \qed
-      \item
+      \item We have the following corollary to part (a):
         \begin{corollary}
           Let $A$ be a matrix, and let $\vx$ be a random vector. Then
           $\EE\bk{\vx A^\T} = \EE\bk{\vx}A^\T$.
@@ -352,5 +358,125 @@
 
   \section*{Solution:}
   My github username is \texttt{redpanda1234}.
+  \begin{enumerate}
+    \item By Cramer's rule, we have
+      \begin{align*}
+        m
+        &= \frac{\displaystyle n \sum_{i=1}^n \bk{x_iy_i} -
+          \pn{\sum_{i=1}^n x_i}\pn{\sum_{i=1}^n y_i}}{\displaystyle n
+          \sum_{i=1}^n \bk{x_i^2} - \pn{\sum_{i=1}^n x_i}^2} \\
+        &= \frac{4\pn{0+6+18+32} -
+          \pn{0+2+3+4}\pn{1+3+6+8}}{4\pn{0+4+9+16} - \pn{0+2+3+4}^2}
+        \\
+        &= \frac{4\pn{56} - \pn{9\cdot 8}}{4\pn{29} - 9^2} \\
+        &= \frac{224 - 162}{116 - 81} \\
+        &= \boxed{\frac{62}{35}}
+      \end{align*}
+      and
+      \begin{align*}
+        b
+        &= \frac{\displaystyle \pn{\sum_{i=1}^n x_i^2}\pn{\sum_{i=1}^n
+          y_i} - \pn{\sum_{i=1}^n x_i}\pn{\sum_{i=1}^n x_iy_i}}{
+          \displaystyle n \sum_{i=1}^n \bk{x_i^2} - \pn{\sum_{i=1}^n
+          x_i}^2} \\
+        &= \frac{\pn{0 + 4 + 9 + 16}\pn{1 + 3 + 6 +8} - \pn{0 + 2 + 3
+          + 4}\pn{0 + 6 + 18 + 32}}{35} \\
+        &= \frac{29\cdot 18 - 9\cdot 56}{35} \\
+        &= \frac{522 - 504}{35} \\
+        &= \boxed{\frac{18}{35}}
+      \end{align*}
+    \item By the normal equation,
+      \[
+        X^\T \vy = X^\T X \bm{\theta}
+      \]
+      we have
+      \[
+        X =
+        \begin{bmatrix}
+          1 & 0 \\
+          1 & 2 \\
+          1 & 3 \\
+          1 & 4
+        \end{bmatrix}
+        \qquad
+        \vy =
+        \begin{bmatrix}
+          1 \\
+          3 \\
+          6 \\
+          8
+        \end{bmatrix}
+      \]
+      thus
+      \begin{align*}
+        X^\T X
+        &=
+          \begin{bmatrix}
+            4 & 9 \\
+            9 & 29
+          \end{bmatrix}
+      \end{align*}
+      and
+      \[
+        X^\T \vy =
+        \begin{bmatrix}
+          18 \\
+          56
+        \end{bmatrix}
+      \]
+      hence
+      \begin{align*}
+        \begin{bmatrix}
+          18 \\
+          56
+        \end{bmatrix}
+        &=
+          \begin{bmatrix}
+            4 & 9 \\
+            9 & 29
+          \end{bmatrix}
+                \begin{bmatrix}
+                  \theta_0 \\
+                  \theta_1
+                \end{bmatrix}
+      \end{align*}
+      so we solve the following:
+      \begin{align*}
+        \begin{amatrix}{2}
+          4 & 9 & 18 \\
+          9 & 29 & 56
+        \end{amatrix} \\
+        \begin{amatrix}{2}
+          4 & 9 & 18 \\
+          1 & 11 & 20
+        \end{amatrix} \\
+        \begin{amatrix}{2}
+          0 & -35 & -62 \\
+          1 & \ph 11 & 20
+        \end{amatrix}\\
+        \begin{amatrix}{2}
+          0 & 1 & \frac{62}{35} \\[.5em]
+          1 & 11 & 20
+        \end{amatrix}\\
+        \begin{amatrix}{2}
+          0 & 1 & \frac{62}{35} \\[.5em]
+          1 & 0 & \frac{18}{35}
+        \end{amatrix}
+      \end{align*}
+      thus
+      \[
+        \bm{\theta} =
+        \begin{bmatrix}
+          b \\
+          m
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+          \frac{62}{35} \\[.5em]
+          \frac{18}{35}
+        \end{bmatrix}
+      \]
+      as in part (a).
+  \end{enumerate}
 
 \end{document}
