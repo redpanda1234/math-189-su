@@ -35,12 +35,6 @@
 
 \lfoot{Due Tuesday, May 15th 2018}
 
-\newenvironment{amatrix}[1]{%
-  \left[\begin{array}{@{}*{#1}{c}|c@{}}
-}{%
-  \end{array}\right]
-}
-
 \begin{document}
 
 % --------------------------- Problem 1 ---------------------------- %
@@ -137,25 +131,6 @@
             \EE\bk{x_n}
           \end{bmatrix}
         \]
-        % and for any continuous random variable, we have
-        % \[
-        %   \EE\bk{Y} = \int_{-\infty}^\infty y f(y) \dd y
-        % \]
-        % where $f(y)$ is some probability density function. For each of
-        % the $x_i$, define $f_i(x_i)$ to be the corresponding
-        % probability density function. Then
-        % \begin{align*}
-        %   \EE\bk{\vx}
-        %   &=
-        %     \begin{bmatrix}
-        %       \displaystyle\int_{-\infty}^\infty x_0 f_0(x_0) \dd x_0
-        %       \\[1em]
-        %       \displaystyle\int_{-\infty}^\infty x_1 f_1(x_1) \dd x_1
-        %       \\[1em]
-        %       \vdots \\[1em]
-        %       \displaystyle\int_{-\infty}^\infty x_n f_n(x_n) \dd x_n
-        %     \end{bmatrix}
-        % \end{align*}
         Let $A \in M_{m\times n}(\RR)$, with rows $\va_0$, $\va_1$,
         $\ldots$, $\va_m$. Then $A\EE\bk{\vx}$ is given by
         \begin{align*}
@@ -316,15 +291,6 @@
             A^\T}\\
           &= \EE\bk{A\pn{\vx- \EE\bk{\vx}}(\vx-\EE\bk{\vx})^\T
             A^\T}\\
-          % &= \EE\bk{A\vx\vx^\T A^\T - A\vx\EE\bk{\vx}^\T A^\T
-          %   -A\EE\bk{\vx}\vx^\T A^\T + A\EE\bk{\vx}\EE\bk{\vx}^\T
-          %   A^\T} \\
-          % &= \EE\bk{A\pn{\vx \vx^\T - \vx \EE\bk{\vx}^\T -
-          %   \EE\bk{\vx}\vx^\T + \EE\bk{\vx}\EE\bk{\vx}^\T}A^\T} \\
-          % &= A\EE\bk{\pn{\vx \vx^\T - \vx \EE\bk{\vx}^\T -
-          %   \EE\bk{\vx}\vx^\T + \EE\bk{\vx}\EE\bk{\vx}^\T}A^\T} \\
-          % &= A\EE\bk{\pn{\vx \vx^\T - \vx \EE\bk{\vx}^\T -
-          %   \EE\bk{\vx}\vx^\T + \EE\bk{\vx}\EE\bk{\vx}^\T}}A^\T \\
           &= A\EE\bk{\pn{\vx - \EE\bk{\vx}}\pn{\vx - \EE\bk{\vx}}^\T}
             A^\T \\
           &= A\cov\bk{\vx} A^\T = A \bm{\Sigma} A^\T
