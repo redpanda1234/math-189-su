@@ -54,20 +54,11 @@ if __name__ == '__main__':
     m_opt = 62.0/35
     b_opt = 18.0/35
 
-    # TODO: generate 100 points along the line of optimal linear fit.
-
-    # HINT:
-    # 1) Use np.linspace to get the x-coordinate of 100 points
-    # 2) Calculate the y-coordinate of those 100 points with the m_opt and
-    #    b_opt, remember y = mx+b.
-    # 3) Use a.reshape(-1,1), where a is a np.array, to reshape the array
-    #    to appropriate shape for generating plot
-
     theta = np.array([m_opt, b_opt]).transpose()
 
     num_pts = 100
 
-    X_vals = np.linspace(-2,10,num=num_pts)
+    X_vals = np.linspace(-2,6,num=num_pts)
     X_space_stacked = np.array([X_vals, np.ones(X_vals.shape)])
 
     y_space = np.matmul(theta.transpose(), X_space_stacked)
@@ -78,8 +69,11 @@ if __name__ == '__main__':
 
     # plot the optimal learn fit obtained and save it to current dir
     plt.plot(X_space, y_space)
-    plt.savefig('hw1pr2c.png', format='png')
+    plt.savefig('hw1pr2c.pdf', format='pdf')
     plt.close()
+
+
+
 
     # part d: Optimal linear fit with random data points
 
@@ -89,24 +83,7 @@ if __name__ == '__main__':
     # normal distribution itself
     noise = np.random.normal(loc=mu, scale=sigma, size=sampleSize).reshape(-1,1)
 
-    # TODO: generate y-coordinate of the 100 points with noise
-
-    # HINT:
-    # 1) Use X_space created in the part (c) above as the x-coordinates
-    # 2) In this case, y = mx + b + noise
-
     y_space_rand = y_space + noise
-
-    # TODO: calculate the new parameters for optimal linear fit using the
-    #       100 new points generated above
-
-    # HINT:
-    # 1) Use np.ones_like to create a column of 1
-    # 2) Use np.hstack to stack column of ones on X_space to create
-    #    X_space_stacked
-    # 3) Use np.linalg.solve to solve W_opt following the normal equation:
-    #    X.T * X * W_opt = X.T * y
-
 
     # X_space_stacked = X_space # need to be replaced following hint 1
     # and 2
@@ -122,8 +99,8 @@ if __name__ == '__main__':
 
     theta_opt = np.array([b_rand_opt, m_rand_opt]).transpose()
     print(theta_opt)
-    y_space = np.matmul(theta_opt.transpose(), X_space_stacked)
-    y_pred_rand = (y_space.reshape(-1,1))
+    y_space_new = np.matmul(theta_opt.transpose(), X_space_stacked)
+    y_pred_rand = (y_space_new.reshape(-1,1))
 
     # generate plot; plot original data points and line
     plt.plot(X, y, 'ro')
@@ -137,6 +114,6 @@ if __name__ == '__main__':
     # set up legend and save the plot to the current folder
     plt.legend((orig_plot, rand_plot), \
                ('original fit', 'fit with noise'), loc = 'best')
-    plt.savefig('hw1pr2d.png', format='png')
+    plt.savefig('hw1pr2d.pdf', format='pdf')
     plt.show()
     plt.close()
