@@ -347,9 +347,10 @@
           f(\vx)
           &= \norm{A\vx - \vb}_2^2 + \norm{\Gamma \vx }_2^2\\
           &= \vx^\T A^\T A \vx - \vx^\T A^\T \vb - \vb^\T A \vx +
-            \vx^\T \Gamma^\T \Gamma \vx
+            \vx^\T \Gamma^\T \Gamma \vx + \vb^\T \vb
         \end{align*}
-        we want to minimize $f(\vx)$. Hence, we set the gradient to 0:
+        we want to minimize $f(\vx)$. Hence, we set the gradient to 0.
+        Note that the $\vb^\T \vb$ goes away.
         \begin{align*}
           \nabla_{\vx} f(\vx)
           &= \nabla_{\vx} \pn{\vx^\T A^\T A \vx - \vx^\T A^\T \vb -
@@ -385,12 +386,79 @@
         \[
           \boxed{\vx = \pn{A^\T A + \lambda I}^{-1} A^\T \vb}
         \]
-      \item
-      \item By part (b), we see that
-        \[
-          \boxed{\vx = \pn{A^\T A + \Gamma^\T \Gamma}^{-1}A^\T \pn{b\1
-              - \vy}}
-        \]
+      \item We find $\lambda^\star = 8.5361$, with RMSE on the test
+        set being $.8628$. See plots on next page.
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=13cm]{RMSE_vs_lambda.png}
+          \caption{RMSE vs. $\lambda$}
+          \label{fig:rmsvl}
+        \end{figure}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=13cm]{norm_vs_lambda.png}
+          \caption{$\norm{\bm{\theta}^\star}_2^2$ vs. $\lambda$}
+          \label{fig:fdsa}
+        \end{figure}
+      \item I'm still a little unclear about why we can't recycle our
+        answer from (b). Anyways, we want to minimize
+        \begin{align*}
+          f(\vx)
+          &= \pn{A\vx + b\1 - \vy}^\T \pn{A\vx + b\1 - \vy} + \vx^\T
+            \Gamma^\T \Gamma \vx \\
+          &= \vx^\T A^\T A \vx + \vx^\T A^\T b\1 - \vx^\T A^\T \vy +
+            b\1^\T A\vx + b^2 \1^\T \1 - b\1^\T \vy - \vy^\T A\vx -
+            \vy^\T b\1 + \vy^\T \vy + \vx^\T \Gamma^\T \Gamma \vx
+        \end{align*}
+        hence
+        \begin{align*}
+          \nabla_\vx f
+          &= 2(A^\T A + \Gamma^\T \Gamma) \vx + A^\T\pn{2b\1-2\vy}\\
+          &= 0
+        \end{align*}
+        and
+        \begin{align*}
+          \nabla_b f
+          &= 2\vx^\T A^\T \1 + 2bn - 2\1^\T \vy \\
+          &= 0
+        \end{align*}
+        thus, rearranging terms, transposing the $\vx$ term and
+        dividing by $2n$, we have
+        \begin{align*}
+          b^\star
+          &= \frac{\1^\T\pn{\vy - A\vx}}{n}
+        \end{align*}
+        plugging back into the $\nabla_\vx$ equation, we have
+        \begin{align*}
+          0
+          &= \pn{A^\T A + \Gamma^\T \Gamma}\vx + A^\T \pn{\frac{
+            \1\1^\T\pn{\vy - A\vx}}{n} - \vy} \\
+          &= \pn{A^\T A + \Gamma^\T \Gamma}\vx + \frac{1}{n} A^\T \1
+            \1^\T \vy - \frac{1}{n}A^\T \1\1^\T A\vx -
+            A^\T \vy \\
+          &= \pn{A^\T A + \Gamma^\T \Gamma - \frac{1}{n}A^\T \1\1^\T
+            A}\vx + \frac{1}{n} A^\T \1 \1^\T \vy - A^\T \vy
+        \end{align*}
+        hence
+        \begin{align*}
+          \pn{A^\T A + \Gamma^\T \Gamma - \frac{1}{n}A^\T \1\1^\T
+          A}\vx
+          &= A^\T \vy - \frac{1}{n} A^\T \1 \1^\T \vy \\
+          &= \pn{A^\T - \frac{1}{n}A^\T \1\1^\T}\vy
+        \end{align*}
+        and so
+        \begin{align*}
+          \vx
+          &= \pn{A^\T A + \Gamma^\T \Gamma - \frac{1}{n}A^\T \1\1^\T
+            A}^{-1} \pn{A^\T - \frac{1}{n}A^\T \1\1^\T}\vy \\
+          &= \pn{A^\T \bk{I - \frac{1}{n}\1\1^\T}A +
+            \Gamma^\T\Gamma}^{-1} A^\T \pn{I - \frac{1}{n}\1\1^\T}\vy
+        \end{align*}
+        % By part (b), we see that
+        % \[
+        %   \boxed{\vx = \pn{A^\T A + \Gamma^\T \Gamma}^{-1}A^\T \pn{b\1
+        %       - \vy}}
+        % \]
       \item
     \end{enumerate}
 

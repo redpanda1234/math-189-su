@@ -122,6 +122,10 @@ def RMSE_vs_lambda(X_train, y_train, X_val, y_val):
         3) Generate, RMSE_list, a list of RMSE according to reg_list
     """
     reg_list = np.random.uniform(low=0.0, high=150.0, size=(300,))
+
+    # Sort so that the plot can connect sequential terms nicely
+    reg_list.sort()
+
     W_list = np.array([linreg(X_train, y_train, reg=x) for x in
         reg_list])
     # Calculate RMSE with the validation data
@@ -163,14 +167,15 @@ def norm_vs_lambda(X_train, y_train, X_val, y_val):
         2) Then generate norm_list, a list of norm by calculating the
            norm of each weight
     """
-    # TODO: Generate a list of norm, norm_list
-    reg_list = []
-    W_list = []
-    norm_list = []
-    "*** YOUR CODE HERE ***"
+    reg_list = np.random.uniform(low=0.0, high=150.0, size=(300,))
 
+    # Sort so that the plot can connect sequential terms nicely
+    reg_list.sort()
 
-    "*** END YOUR CODE HERE ***"
+    W_list = np.array([linreg(X_train, y_train, reg=x) for x in
+        reg_list])
+    # Calculate RMSE with the validation data
+    norm_list = np.array([np.linalg.norm(W, ord=2) for W in W_list])
 
     # Set up plot style
     plt.style.use('ggplot')
