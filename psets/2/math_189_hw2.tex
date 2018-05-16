@@ -219,8 +219,8 @@
       \]
       is equivalent to the ridge regression problem
       \[
-        \argmin \frac{1}{N}\sum_{i=1}^N (y_i - (w_0 + \vw^\T\vx_i))^2
-        + \lambda \norm{vw}_2^2
+        \argmin_\vw \frac{1}{N}\sum_{i=1}^N (y_i - (w_0 +
+        \vw^\T\vx_i))^2 + \lambda \norm{\vw}_2^2
       \]
       with $\lambda = \sigma^2 / \tau^2$.
 
@@ -248,7 +248,8 @@
     1$, we compute $\hat\vy = \bm{\theta}^\T\vx + b$. This corresponds
     to solving the optimization problem
     \[
-      \text{minimize: } \norm{A\vx + b\1 - \vy}_2^2 + \norm{\Gamma \vx}_2^2
+      \text{minimize: } \norm{A\vx + b\1 - \vy}_2^2 + \norm{\Gamma
+        \vx}_2^2
     \]
     Solve for the optimal $\vx^\star$ explicitly. Use this close form
     to compute the bias term for the previous problem (with the same
@@ -275,5 +276,67 @@
   \clearpage
 
   \section*{Solution:}
+    \begin{enumerate}
+      \item Substituting in our expression for the standard normal
+        probability distribution, we have
+        \begin{align*}
+          \mrm{MAP}(\vx)
+          &= \argmax_{\vw} \sum_{i=1}^N \bk{
+            \log\pn{\frac{1}{\sqrt{2\pi}\sigma} \exp\pn{
+            -\frac{\pn{y_i - (w_0 + \vw^\T \vx_i)}^2}{2\sigma^2}}}} +
+            \sum_{j=1}^D \bk{\log\pn{\frac{1}{\sqrt{2\pi}\sigma}
+            \exp\pn{-\frac{ w_j^2}{2\tau^2}}}} \\
+          &= \argmax_{\vw} \sum_{i=1}^N
+            \bk{\log{\frac{1}{\sqrt{2\pi}\sigma}} - \frac{\pn{y_i -
+            \pn{w_0 + \vw^\T \vx_i}}^2}{2\sigma^2}} + \sum_{j=1}^D
+            \bk{\log\pn{\frac{1}{\sqrt{2\pi}\tau}} -
+            \frac{w_j^2}{2\tau^2}}
+            \shortintertext{The constants don't matter (independent of
+            $\vw$), so we ignore them.}
+          &= \argmax_{\vw} \sum_{i=1}^N \bk{-\frac{\pn{y_i - (w_0 +
+            \vw^\T \vx_i)}^2}{2\sigma^2}} + \sum_{j=1}^D
+            \bk{-\frac{w_j^2}{2\tau^2}}
+            \shortintertext{multiplying out by $2\sigma^2$, we obtain}
+          2\sigma^2\mrm{MAP}(\vx)
+          &= \sum_{i=1}^N \bk{-(y_i - (w_0 + \vw^\T \vx_i)^2)} +
+            \frac{\sigma^2}{\tau^2} \sum_{j=1}^D \bk{-w_j^2} \\
+          &= -\pn{\sum_{i=1}^N \bk{\pn{y_i - (w_0 + \vw^\T \vx_i)}^2}
+            + \lambda \sum_{j=1}^D \bk{w_j^2}}
+            \shortintertext{by definition of $\ell_2$ norm, this
+            becomes}
+            &= -\pn{\sum_{i=1}^N \bk{\pn{y_i - (w_0 + \vw^\T \vx_i)}^2
+             } + \lambda \norm{\vw}_2^2}
+        \end{align*}
+        $\mrm{MAP}(\vx)$ is maximized when the part inside the parens
+        is minimized, hence we seek to solve the following estimation
+        problem:
+        \begin{align*}
+          \Theta(\vw)
+          &= \argmin_{\vw} \sum_{i=1}^N \pn{y_i - (w_0 + \vw^\T
+            \vx_i)}^2 + \lambda \norm{\vw}_2^2
+        \end{align*}
+        Supposedly, I'm missing a factor of $1/N$. But, without
+        redefining $\lambda$, I don't see how I could obtain one.
+      \item By the definition of $\ell_2$ norm, we have
+        \begin{align*}
+          f(\vx)
+          &= \norm{A\vx - \vb}_2^2 + \norm{\Gamma \vx }_2^2\\
+          &= \vx^\T A^\T A \vx - \vx^\T A^\T \vb - \vb^\T A \vx +
+            \vx^\T \Gamma^\T \Gamma \vx
+        \end{align*}
+        we want to minimize $f(\vx)$. Hence, we set the gradient to 0:
+        \begin{align*}
+          \nabla_{\vx} f(\vx)
+          &= \nabla_{\vx} \pn{\vx^\T A^\T A \vx - \vx^\T A^\T \vb -
+            \vb^\T A \vx + \vx^\T \Gamma^\T \Gamma \vx} \\
+          &= \nabla_{\vx} \pn{\vx^\T \pn{A^\T A + \Gamma^\T \Gamma}\vx
+            - \pn{\vx^\T A^\T \vb + \pn{\vx^\T A^\T \vb}^\T}}
+            \shortintertext{since these will all be $1\times 1$
+            matrices, they'll all be symmetric, hence $\vx^\T A^\T \vb
+            = (\vx^\T A^\T \vb)^\T$. Thus,}
+          &= \nabla_{\vx} \pn{\vx^\T \pn{A^\T A + \Gamma^\T \Gamma}\vx
+            - 2\vx^\T A^\T\vb}
+        \end{align*}
+    \end{enumerate}
 
 \end{document}
