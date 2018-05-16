@@ -209,12 +209,34 @@ def linreg_no_bias(X, y, reg=0.0):
     """
     t_start = time.time()
 
-    # Find the numerical solution in part d
-    # TODO: Solve for W_opt, and b_opt
-    "*** YOUR CODE HERE ***"
+    # Get dim parameter for use everywhere
+    m = X.shape[0]
 
+    # get identity matrix of the same shape as X.T @ X
+    I = np.eye(m)
 
-    "*** END YOUR CODE HERE ***"
+    # get identity for gamma
+    I2 = np.eye(X.shape[1])
+
+    # Get 1 1.T
+    ones = np.ones((m,m))
+
+    # Calculate the middle term
+    mat = I - (ones/m)
+
+    print(X.T.shape, mat.shape, y.shape)
+
+    lhs = mat @ X
+    lhs = X.T @ lhs
+    print(lhs.shape, I.shape)
+    lhs += reg*I2
+
+    rhs = mat @ y
+    rhs = mat @ rhs
+
+    # Solve for optimal weight parameters minimizing linear regression
+    W_opt = np.linalg.solve(lhs, rhs)
+    b_opt = np.ones((m,1)) @ (y - (X @ W_opt)) / m
 
     # Benchmark report
     t_end = time.time()
@@ -385,7 +407,6 @@ if __name__ == '__main__':
     #     1) Use np.ones / np.ones_like to create a column of ones
     #     2) Use np.hstack to stack the column to the matrix
     "*** YOUR CODE HERE ***"
-    print(X_train.shape, y_train.shape)
     X_train = np.hstack((np.ones((X_train.shape[0],1)), X_train))
     X_val = np.hstack((np.ones((X_val.shape[0],1)), X_val))
     X_test = np.hstack((np.ones((X_test.shape[0],1)), X_test))
