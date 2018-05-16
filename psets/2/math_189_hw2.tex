@@ -317,7 +317,32 @@
         \end{align*}
         Supposedly, I'm missing a factor of $1/N$. But, without
         redefining $\lambda$, I don't see how I could obtain one.
-      \item By the definition of $\ell_2$ norm, we have
+      \item First, we prove a small lemma.
+        \begin{lemma}
+          Let $\vx \in \RR^n$, and $A \in \mc{L}(\RR^n)$. Then
+          $\nabla_{\vx} \pn{\vx^\T A \vx} = \vx^\T \pn{A + A^\T}$.
+        \end{lemma}
+        \begin{proof}
+          By the product rule, we have
+          \begin{align*}
+            \nabla_{\vx} \pn{\vx^\T A \vx}
+            &= \pn{\nabla_{\vx}\pn{\vx^\T}} A \vx + \vx^\T A
+              \pn{\nabla_{\vx} \pn{\vx}}
+              \shortintertext{because these are all $1\times 1$
+              matrices, they are symmetric, hence}
+            &= \pn{\nabla_{\vx}\pn{\vx^\T}} A \vx + \pn{\vx^\T A
+              \pn{\nabla_{\vx} \pn{\vx}}}^\T \\
+            &= \pn{\nabla_{\vx}\pn{\vx^\T}} A\vx +
+              \pn{\nabla_{\vx}\pn{\vx}}^\T A^\T \vx \\
+            &= \pn{\nabla_{\vx}\pn{\vx^\T}} A\vx +
+              \pn{\nabla_{\vx}\pn{\vx^\T}} A^\T\vx \\
+            &= \nabla_{\vx} \pn{\vx^\T} \pn{A + A^\T}\vx \\
+            &= 1\cdot \pn{A + A^\T}\vx
+          \end{align*}
+          as desired.
+        \end{proof}
+        Now, we proceed to the main problem. By the definition of
+        $\ell_2$ norm, we have
         \begin{align*}
           f(\vx)
           &= \norm{A\vx - \vb}_2^2 + \norm{\Gamma \vx }_2^2\\
@@ -336,7 +361,29 @@
             = (\vx^\T A^\T \vb)^\T$. Thus,}
           &= \nabla_{\vx} \pn{\vx^\T \pn{A^\T A + \Gamma^\T \Gamma}\vx
             - 2\vx^\T A^\T\vb}
+            \shortintertext{by the lemma,}
+          &= \pn{A^\T A + \Gamma^\T \Gamma + AA^\T +
+            \Gamma\Gamma^\T}\vx - 2A^\T \vb \\
+          &= 2(A^\T A + \Gamma^\T \Gamma)\vx - 2A^\T \vb \\
+          &= 0
         \end{align*}
+        hence,
+        \begin{align*}
+          2(A^\T A + \Gamma^\T \Gamma)\vx
+          &= 2A^\T \vb \\
+          (A^\T A + \Gamma^\T \Gamma)\vx
+          &= A^\T \vb
+        \end{align*}
+        suppose $(A^\T A + \Gamma^\T \Gamma)$ is invertible. Then
+        \[
+          \boxed{\vx = \pn{A^\T A + \Gamma^\T \Gamma}^{-1} A^\T \vb}
+        \]
+      \item
+      \item By part (b), we see that
+        \[
+          \boxed{\vx = \pn{A^\T A + \Gamma^\T \Gamma}^{-1}A^\T \pn{b\1
+              - \vy}}
+        \]
     \end{enumerate}
 
 \end{document}
