@@ -16,7 +16,8 @@
 \duedate{05/16/2018}
 \dueday{Wednesday}
 \problems{1, 2, 3}
-\acknowledgements{{}, {}, {}}
+\acknowledgements{{Murphy, Stackexchange (thread about Hessian)}, {},
+  {}}
 \onTime{0}
 
 \comments{\textbf{Comments:} Feel free to work with other students,
@@ -63,6 +64,76 @@
   \hrulefill
 
   \section*{Solution:}
+  \begin{enumerate}
+    \item Note that
+      \begin{align*}
+        \sigma'(x)
+        &= \od{}{x} \pn{1+e^{-x}}^{-1} \\
+        &= -1\cdot -e^{-x} \pn{1+e^{-x}}^{-2} \\
+        &= \frac{e^{-x}}{\pn{1+e^{-x}}^2} \\
+        &= \frac{1}{1+e^{-x}} \cdot \frac{e^{-x}}{1 + e^{-x}} \\
+        &= \sigma(x)\bk{\frac{1+e^{-x} - 1}{1+e^{-x}}} \\
+        &= \sigma(x)\bk{\frac{1+e^{-x}}{1+e^{-x}} -
+          \frac{1}{1+e^{-x}}} \\
+        &= \sigma(x)\bk{1-\sigma(x)}
+      \end{align*}
+    \item We have
+      \begin{align*}
+        \mrm{NLL}(\vw)
+        &= -\sum_{i=1}^N y_i \log\pn{h(\vx_i)} + (1-y_i)\log(1-
+          h(\vx_i))
+      \end{align*}
+      where $h(\vx_i)=\sigma(\bm{\theta}^\T \vx_i)$. Hence
+      \begin{align*}
+        \nabla_{\bm{\theta}} \mrm{NLL}(\vw)
+        &= -\sum_{i=1}^N \pd{}{\theta_i} \bk[Big]{ y_i
+          \log\pn{h(\vx_i)} + (1-y_i)\log(1- h(\vx_i)) } \\
+        &= -\sum_{i=1}^N\bk{\frac{y_i}{h(\vx_i)}\pd{h(\vx_i)}{
+          \bm{\theta}} - \frac{1-y_i}{1- h(\vx_i)}h'(\vx_i)
+          \pd{h(\vx_i)}{\bm{\theta}}}
+      \end{align*}
+      by the previous result, we have
+      \[
+        \pd{h(\vx_i)}{\bm{\theta}} = h(\vx_i)(1-h(\vx_i))
+      \]
+      hence
+      \begin{align*}
+        \nabla_{\bm{\theta}} \mrm{NLL}(\vw)
+        &= -\sum_{i=1}^N \bk{y_i\pn{1-h(\vx_i)}\vx_i-(1-y_i)h(\vx_i)
+          \vx_i} \\
+        &= -\sum_{i=1}^N \bk{\vx_i \pn{y_i(1-h(\vx_i)) - (1-y_i)
+          h(\vx_i)}} \\
+        &= -\sum_{i=1}^N \bk{\vx_i\pn{y_i - y_ih(\vx_i) - h(\vx_i) +
+          y_i h(\vx_i)}} \\
+        &= -\sum_{i=1}^N \bk{\vx_i \pn{y_i - h(\vx_i)}} \\
+        &= \sum_{i=1}^N \bk{\vx_i (h(\vx_i) - y_i)}
+      \end{align*}
+      checking with the solutions, we see that it'd be a good idea to
+      define $\mu_i = \sigma(\bm{\theta}^\T \vx_i)$. Then
+      \begin{align*}
+        \nabla_{\bm \theta} \mrm{NLL}(\vw)
+        &= \sum_{i=1}^N \vx_i \pn{\mu_i - y_i} \\
+        &= \bX^\T \pn{\bm{\mu} - \vy}
+      \end{align*}
+    \item Let $\bJ$ denote the Jacobian matrix. Then
+      \begin{align*}
+        \bH(\mrm{NLL}(\vw))
+        &= \bJ(\nabla_{\bm \theta} \mrm{NLL}(\vw))^\T \\
+        &= \bJ(\bX^\T\pn{\bm{\mu} - \vy})^\T \\
+        &= \bJ(\bX^\T \bm{\mu})^\T \\
+        &= \sum_{i=1}^N \pn{\pd{\mu_i}{\bm{\theta}}} \vx_i^\T \\
+        &= \sum_{i=1}^N \pn{\vx_i \pn{\mu_i(1-\mu_i)} \vx_i^\T} \\
+        &= \bX^\T \diag(\mu_1(1-\mu_1), \ldots, \mu_n(1-\mu_n)) \bX \\
+        &= \bX^\T \bS \bX
+      \end{align*}
+      Note that by the definition of $\sigma(x)$, $\forall i \in [N]$,
+      $0 < \mu_i < 1$. Hence $1-\mu_i > 0$. Thus $\forall i \in [N]$,
+      $\mu_i (1-\mu_i) > 0$. Now, observe that $\bS$ is the diagonal
+      matrix of eigenvalues of $\bH$, which are all of the form
+      $\mu_i(1-\mu_i)$. Thus, all the eigenvalues of $\bH$ are
+      nonnegative, so $\bH$ is positive semidefinite. \qed
+  \end{enumerate}
+
 
   \clearpage
 
@@ -79,6 +150,44 @@
   \hrulefill
 
   \section*{Solution:}
+    For $\PP(x;\sigma^2)$ to be normalized, it must integrate to 1
+    over $\RR$. Hence, we must have
+    \begin{align*}
+      Z
+      &= \int_{-\infty}^\infty \exp\pn{-\frac{x^2}{2\sigma^2}}\dd x
+    \end{align*}
+    because the antiderivative is not expressable in terms of
+    elementary functions, we pull out some trickery. Squaring $Z$,
+    \begin{align*}
+      Z^2
+      &= \pn{\int_{-\infty}^\infty \exp\pn{-\frac{x^2}{2\sigma^2}}\dd
+        x}^2 \\
+      &= \int_{-\infty}^\infty \exp\pn{-\frac{x_0^2}{2\sigma^2}}\dd
+        x_0 \int_{-\infty}^\infty \exp\pn{-\frac{x_1^2}{2\sigma^2}}\dd
+        x_1 \\
+      &= \int_{-\infty}^\infty \int_{-\infty}^\infty \exp\pn{-\frac{
+        x_0^2 + x_1^2}{2\sigma^2}} \dd x_0 \dd x_1
+    \end{align*}
+    We want to convert to polar coordinates. Consider the
+    transformation $x_0 \mapsto r\cos(\theta)$; $x_1 \mapsto
+    r\sin(\theta)$. Then $x_0^2 + y_0^2 = r^2\pn{\cos^2\pn{\theta} +
+      \sin^2\pn{\theta}} = r^2$, and by the power of Math 60 (and
+    google), we recall that $\dd x \dd y \mapsto r \dd r \dd \theta$.
+    Hence, our integral becomes
+    \begin{align*}
+      Z^2
+      &= \int_0^{2\pi} \int_0^\infty r\exp\pn{-\frac{r}{2\sigma^2} \dd
+        r \dd \theta} \\
+      &= \int_0^{2\pi} \pn{-\sigma^2 \exp\pn{-\frac{r^2}{2\sigma^2}}
+        \bigg\vert_0^\infty } \dd \theta \\
+      &= \int_0^{2\pi} \sigma^2 \dd \theta \\
+      &= 2\pi \sigma^2
+    \end{align*}
+    hence
+    \[
+      \boxed{Z = \sqrt{2\pi}\sigma}
+    \]
+    as desired. \qed
 
   \clearpage
 
