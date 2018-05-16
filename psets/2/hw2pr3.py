@@ -224,19 +224,13 @@ def linreg_no_bias(X, y, reg=0.0):
     # Calculate the middle term
     mat = I - (ones/m)
 
-    print(X.T.shape, mat.shape, y.shape)
+    lhs = (X.T @ mat @ X) + reg*I2
 
-    lhs = mat @ X
-    lhs = X.T @ lhs
-    print(lhs.shape, I.shape)
-    lhs += reg*I2
-
-    rhs = mat @ y
-    rhs = mat @ rhs
+    rhs = X.T @ mat @ y
 
     # Solve for optimal weight parameters minimizing linear regression
     W_opt = np.linalg.solve(lhs, rhs)
-    b_opt = np.ones((m,1)) @ (y - (X @ W_opt)) / m
+    b_opt = np.ones((1,m)) @ (y - (X @ W_opt)) / m
 
     # Benchmark report
     t_end = time.time()
