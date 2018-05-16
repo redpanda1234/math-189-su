@@ -386,17 +386,17 @@
         \[
           \boxed{\vx = \pn{A^\T A + \lambda I}^{-1} A^\T \vb}
         \]
-      \item We find $\lambda^\star = 8.5361$, with RMSE on the test
+      \item We find $\lambda^\star = 9.0314$, with RMSE on the test
         set being $.8628$. See plots on next page.
         \begin{figure}[H]
           \centering
-          \includegraphics[width=13cm]{RMSE_vs_lambda.png}
+          \includegraphics[width=13cm]{RMSE_vs_lambda.pdf}
           \caption{RMSE vs. $\lambda$}
           \label{fig:rmsvl}
         \end{figure}
         \begin{figure}[H]
           \centering
-          \includegraphics[width=13cm]{norm_vs_lambda.png}
+          \includegraphics[width=13cm]{norm_vs_lambda.pdf}
           \caption{$\norm{\bm{\theta}^\star}_2^2$ vs. $\lambda$}
           \label{fig:fdsa}
         \end{figure}
@@ -462,11 +462,11 @@
         %   \boxed{\vx = \pn{A^\T A + \Gamma^\T \Gamma}^{-1}A^\T \pn{b\1
         %       - \vy}}
         % \]
-      \item
+      \item See plot
         \begin{figure}[H]
           \centering
-          \includegraphics[width=8cm]{convergence.png}
-          \caption{$\ell_2$ norm }
+          \includegraphics[width=\linewidth]{convergence.pdf}
+          \caption{$\ell_2$ norm vs. iterations}
           \label{fig:dkl;safjsd}
         \end{figure}
     \end{enumerate}

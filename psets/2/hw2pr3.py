@@ -140,7 +140,7 @@ def RMSE_vs_lambda(X_train, y_train, X_val, y_val):
     plt.title('RMSE vs lambda')
     plt.xlabel('lambda')
     plt.ylabel('RMSE')
-    plt.savefig('RMSE_vs_lambda.png', format='png')
+    plt.savefig('RMSE_vs_lambda.pdf', format='pdf')
     plt.close()
     print('==> Plotting completed.')
 
@@ -186,7 +186,7 @@ def norm_vs_lambda(X_train, y_train, X_val, y_val):
     plt.title('norm vs lambda')
     plt.xlabel('lambda')
     plt.ylabel('norm')
-    plt.savefig('norm_vs_lambda.png', format='png')
+    plt.savefig('norm_vs_lambda.pdf', format='pdf')
     plt.close()
     print('==> Plotting completed.')
 
@@ -341,7 +341,7 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
     plt.title('RMSE vs iteration')
     plt.xlabel('iteration')
     plt.ylabel('RMSE')
-    plt.savefig('convergence.png', format='png')
+    plt.savefig('convergence.pdf', format='pdf')
     plt.close()
     print('==> Plotting completed.')
 
@@ -410,17 +410,17 @@ if __name__ == '__main__':
 
     X_train = np.array(df[df.type == 'train'][[col for col in \
                                      df.columns if col not in exclude]])
-    y_train = np.log(df[df.type == 'train'].shares).reshape((-1, 1))
+    y_train = np.log(df[df.type == 'train'].shares).values.reshape((-1, 1))
 
     # Validation data
     X_val = np.array(df[df.type == 'val'][[col for col in df.columns \
                                            if col not in exclude]])
-    y_val = np.log(df[df.type == 'val'].shares).reshape((-1, 1))
+    y_val = np.log(df[df.type == 'val'].shares).values.reshape((-1, 1))
 
     # Test data
     X_test = np.array(df[df.type == 'test'][[col for col in df.columns \
                                              if col not in exclude]])
-    y_test = np.log(df[df.type == 'test'].shares).reshape((-1, 1))
+    y_test = np.log(df[df.type == 'test'].shares).values.reshape((-1, 1))
 
 
     # TODO: Stack a column of ones to the feature data, X_train, X_val
