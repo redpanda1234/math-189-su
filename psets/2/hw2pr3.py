@@ -268,16 +268,17 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
     m_train, n = X_train.shape
     m_val = X_val.shape[0]
 
-    # TODO: initialize the weights and bias and their corresponding
-    # gradients
+    # Initialize weights array
+    W = np.zeros((n,1))
 
-    # Please use the variable names: W (weights), W_grad (gradients of
-    # W), b (bias), b_grad (gradients of b)
-    "*** YOUR CODE HERE ***"
+    # Initialize weight gradient array
+    W_grad = np.ones(W.shape)
 
+    # Initialize bias term
+    b = 0.0
 
-    "*** END YOUR CODE HERE ***"
-
+    # ...and bias gradient. You might be sensing a pattern here.
+    b_grad = 1.0
 
     print('==> Running gradient descent...')
 
@@ -303,14 +304,20 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
     while np.linalg.norm(W_grad) > eps and np.linalg.norm(b_grad) > eps \
           and iter_num < max_iter:
 
-        "*** YOUR CODE HERE ***"
+        train_RMSE = gd_RMSE(X_train, W, b, y_train)
+        val_RMSE = gd_RMSE(X_val, W, b, y_val)
 
+        obj_train += [train_RMSE]
+        obj_val += [val_RMSE]
 
-        "*** END YOUR CODE HERE ***"
+        W_grad, b_grad = get_gd_grads(X_train, W, b, y_train, reg=0.0)
+
+        W -= lr_W * W_grad
+        b -= lr_b * b_grad
 
         # print statements for debugging
         if (iter_num + 1) % print_freq == 0:
-            print('-- Iteration{} - training rmse {: 4.4f} - gradient norm {: 4.4E}'.format( iter_num + 1, train_rmse, np.linalg.norm(W_grad)))
+            print('-- Iteration{} - training RMSE {: 4.4f} - gradient norm {: 4.4E}'.format( iter_num + 1, train_RMSE, np.linalg.norm(W_grad)))
 
             # goes to next iteration
             iter_num += 1
@@ -320,6 +327,7 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
     t_end = time.time()
     print('--Time elapsed for training: {t:4.2f} seconds'.format(\
           t=t_end - t_start))
+
 
     # Set up plot style
     plt.style.use('ggplot')
@@ -334,14 +342,37 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
     plt.title('RMSE vs iteration')
     plt.xlabel('iteration')
     plt.ylabel('RMSE')
+    plt.show()
     plt.savefig('convergence.png', format='png')
     plt.close()
     print('==> Plotting completed.')
 
     return b, W
 
+def gd_RMSE(X, W, b, y):
+    """
+    Helper function for gradient descent algorithm. Takes X, a numpy
+    array of data, W, a numpy array of weights, b, a bias term, and y,
+    the expected value data thing. Returns the root mean square error
+    of the model.
+    """
+    norm = np.linalg.norm((W @ X).reshape(-1, 1) + b - y)
+    RMSE = norm / np.sqrt(X.shape[0])
+    return RMSE
 
+def get_gd_grads(X, W, b, y, reg=0.0):
+    """
+    Helper function for gradient descent algorithm. Calculates the
+    gradient of the weight array.
+    """
+    m, n = X.shape
+    I = np.eye(n)
+    lhsw = (X.T @ X + reg * I) @ W
+    rhsw = X.T @ (b - y)
+    W_grad = (lhsw + rhsw)/m
 
+    b_grad = (sum(X @ W) - sum(y) + b*m)/m
+    return (W_grad, b_grad)
 
 ###########################################
 #               Main Driver Function              #
