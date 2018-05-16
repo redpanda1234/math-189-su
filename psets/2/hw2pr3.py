@@ -272,13 +272,13 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
     W = np.zeros((n,1))
 
     # Initialize weight gradient array
-    W_grad = np.ones(W.shape)
+    W_grad = np.ones_like(W)
 
     # Initialize bias term
-    b = 0.0
+    b = 0.
 
     # ...and bias gradient. You might be sensing a pattern here.
-    b_grad = 1.0
+    b_grad = 1.
 
     print('==> Running gradient descent...')
 
@@ -302,8 +302,7 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
 
     # start iteration for gradient descent
     while np.linalg.norm(W_grad) > eps and np.linalg.norm(b_grad) > eps \
-          and iter_num < max_iter:
-
+    and iter_num < max_iter:
         train_RMSE = gd_RMSE(X_train, W, b, y_train)
         val_RMSE = gd_RMSE(X_val, W, b, y_val)
 
@@ -320,7 +319,7 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
             print('-- Iteration{} - training RMSE {: 4.4f} - gradient norm {: 4.4E}'.format( iter_num + 1, train_RMSE, np.linalg.norm(W_grad)))
 
             # goes to next iteration
-            iter_num += 1
+        iter_num += 1
 
 
     # Benchmark report
@@ -342,7 +341,6 @@ def grad_descent(X_train, y_train, X_val, y_val, reg=0.0, lr_W=2.5e-12, \
     plt.title('RMSE vs iteration')
     plt.xlabel('iteration')
     plt.ylabel('RMSE')
-    plt.show()
     plt.savefig('convergence.png', format='png')
     plt.close()
     print('==> Plotting completed.')
@@ -356,7 +354,7 @@ def gd_RMSE(X, W, b, y):
     the expected value data thing. Returns the root mean square error
     of the model.
     """
-    norm = np.linalg.norm((W @ X).reshape(-1, 1) + b - y)
+    norm = np.linalg.norm((X @ W).reshape((-1, 1)) + b - y)
     RMSE = norm / np.sqrt(X.shape[0])
     return RMSE
 
