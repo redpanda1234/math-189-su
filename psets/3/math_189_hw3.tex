@@ -16,7 +16,7 @@
 \duedate{05/17/2018}
 \dueday{Thursday}
 \problems{1, 2}
-\acknowledgements{{}, {}}
+\acknowledgements{{Kevin Cotton, Tim Player}, {Solutions}}
 \onTime{0}
 
 \comments{\textbf{Comments:} Feel free to work with other students,
@@ -45,6 +45,71 @@
   \hrulefill
 
   \section*{Solution:}
+    \begin{enumerate}
+      \item We have
+        \begin{align*}
+          \mu
+          &= \EE\bk{\theta \mid a,b} \\
+          &= \frac{1}{B(a,b)} \int_0^1 \theta \cdot \theta^{a-1}
+            \pn{1-\theta}^{b-1} \dd \theta \\
+          &= \frac{1}{B(a,b)} \int_0^1 \theta^a \pn{1-\theta}^{b-1} \dd
+            \theta
+            \shortintertext{note that the inside of the integral is just
+            the probability density function for a beta distribution
+            parameterized by $a+1$, $b$. Hence, the integral is just
+            $B(a+1,b)$, and so}
+          &= \frac{B(a+1,b)}{B(a,b)} \\
+          &= \frac{\Gamma(a+1)\Gamma(b) \Gamma(a+b)}{\Gamma(a+1+b)
+            \Gamma(a) \Gamma(b)}
+            \shortintertext{By definition, $\Gamma(s+1) = s\Gamma(s)$,
+            hence }
+          &= \frac{a \Gamma(a) \Gamma(a+b)}{\Gamma(a)(a+b)\Gamma(a+b)} \\
+          &= \boxed{\frac{a}{a+b}}
+        \end{align*}
+      \item The mode will correspond to the maximum in the probability
+        density function. We apply the first derivative test:
+        \begin{align*}
+          \od{\PP(\theta;a,b)}{\theta}
+          &= \frac{1}{B(a,b)}\pn{(a-1)\theta^{a-2}\pn{1-\theta}^{b-1} -
+            (b-1)\theta^{a-1}\pn{1-\theta}^{b-2}} \\
+          &= 0
+        \end{align*}
+        and so
+        \begin{align*}
+          (a-1)\theta^{a-2}\pn{1-\theta}^{b-1}
+          &= (b-1)\theta^{a-1}\pn{1-\theta}^{b-2}
+            \shortintertext{note that we have trivial solutions
+            $\theta=0,1$. Supposing $\theta \neq 0,1$, }
+            (a-1)(1-\theta)
+          &= (b-1)\theta \\
+          a-1
+          &= (b-1 + a-1)\theta \\
+          \frac{a-1}{a+b-2}
+          &= \theta
+        \end{align*}
+      \item The variance is given by
+        \begin{align*}
+          \var\pn{\theta}
+          &= \EE\bk{\pn{\theta - \mu}^2} \\
+          &= \frac{1}{B(a,b)} \int_0^1 \pn{\theta - \frac{a}{a+b}}^2
+            \theta^{a-1} \pn{1-\theta}^{b-1} \dd \theta \\
+          &= \frac{1}{B(a,b)} \int_0^1 \theta^{a+1}\pn{1-\theta}^{b-1}
+            - \frac{2a}{a+b}\theta^{a}\pn{1-\theta}^{b-1} +
+            \frac{a^2}{\pn{a+b}^2} \theta^{a-1}\pn{1-\theta}^{b-1} \dd
+            \theta \\
+          &= \frac{1}{B(a,b)} \pn{B(a+2,b) - \frac{2a}{a+b}B(a+1,b) +
+            \frac{a^2}{(a+b)^2} B(a,b)} \\
+          &= \frac{B(a+2,b)}{B(a,b)} - \frac{2a}{a+b} \cdot
+            \frac{a}{a+b} + \frac{a^2}{(a+b)^2} \\
+          &= \frac{a(a+1)}{(a+b+1)(a+b)} - \frac{a^2}{(a+b)^2} \\
+          &= \frac{\pn{a^2+a}\pn{a+b} - a^2\pn{a+b+1}}{\pn{a+b+1}
+            \pn{a+b}^2} \\
+          &= \frac{\cancel{a^3} + \bcancel{a^2b} + \cancel{a^2} + ab -
+            \cancel{a^3} - \bcancel{a^2b} - \cancel{a^2}}{\pn{a+b+1}
+            \pn{a+b}^2} \\
+          &= \boxed{\frac{ab}{\pn{a+b+1}\pn{a+b}^2}}
+        \end{align*}
+    \end{enumerate}
 
   \clearpage
 
@@ -62,5 +127,93 @@
   \hrulefill
 
   \section*{Solution:}
-
+    We apply $\exp\log$:
+    \begin{align*}
+      \exp\pn{\log\pn{\mrm{Cat}\pn{\vx \mid \bm{\mu}}}}
+      &= \exp\pn{\log\pn{\prod_{i=1}^K \mu_i^{x_i}}} \\
+      &= \exp\pn{\sum_{i=1}^K x_i \log\pn{\mu_i}} \tag{2}
+    \end{align*}
+    note that
+    \begin{align*}
+      \sum_{i=1}^K x_i
+      &= 1 \\
+      x_K
+      &= 1 - \sum_{i=1}^{K-1} x_i
+    \end{align*}
+    and
+    \begin{align*}
+      \sum_{i=1}^K \mu_i
+      &= 1 \\
+      \mu_K
+      &= 1 - \sum_{i=1}^{K-1} \mu_ix
+    \end{align*}
+    hence we can express (2) by
+    \begin{align*}
+      \mrm{Cat}\pn{\vx \mid \bm{\mu}}
+      &= \exp\pn{\sum_{i=1}^{K-1} x_i \log\pn{\mu_i} + \pn{1 -
+        \sum_{i=1}^{K-1} x_i} \log\pn{1 - \sum_{i=1}^{K-1} \mu_i}} \\
+      &= \exp\pn{\sum_{i=1}^{K-1} x_i \bk{\log\pn{\mu_i} - \log\pn{1-
+        \sum_{i=1}^K \mu_i}} + \log\pn{1 - \sum_{i=1}^{K-1} \mu_i}}
+      \\
+      &= \exp\pn{\sum_{i=1}^{K-1} \bk{x_i \log\pn{\frac{\mu_i}{1 -
+        \sum_{i=1}^{K} \mu_i}}} + \log\pn{\mu_K}} \\
+      &= \exp\pn{\sum_{i=1}^{K-1} \bk{x_i\log\pn{\frac{\mu_i}{\mu_K}}}
+        + \log\pn{\mu_K}}
+    \end{align*}
+    hence, if
+    \begin{align*}
+      \bm{\eta}
+      &=
+        \begin{bmatrix}
+          \log\pn{\frac{\mu_1}{\mu_K}} \\
+          \log\pn{\frac{\mu_2}{\mu_K}} \\
+          \vdots \\
+          \log\pn{\frac{\mu_{K-1}}{\mu_K}}
+        \end{bmatrix}
+    \end{align*}
+    then integers $\forall 0 \leq i \leq K-1$
+    \begin{align*}
+      \eta_i
+      &= \log\pn{\frac{\mu_i}{\mu_K}} \\
+      e^{\eta_i} \mu_K
+      &= \mu_i
+    \end{align*}
+    and so
+    \begin{align*}
+      \mu_K
+      &= 1 - \mu_K \sum_{i=1}^{K-1} e^{\eta_i} \\
+      \mu_K \pn{1 + \sum_{i=1}^{K-1}e^{\eta_i}}
+      &= 1 \\
+      \mu_K
+      &= \frac{1}{1 + \sum_{i=1}^{K-1}e^{\eta_i}}
+    \end{align*}
+    hence
+    \begin{align*}
+      \mu_i
+      &= \frac{e^{\eta_i}}{1 + \sum_{i=1}^{K-1} e^{\eta_i}}
+    \end{align*}
+    Thus, letting
+    \begin{align*}
+      T(\vx)
+      &=
+        \begin{bmatrix}
+          \mathbb{I}\set{x_1 = 1} \\
+          \mathbb{I}\set{x_2 = 1} \\
+          \vdots \\
+          \mathbb{I}\set{x_{K-1} = 1}
+        \end{bmatrix}
+    \end{align*}
+    and $h(\vx) = 1$, and
+    \begin{align*}
+      A\pn{\bm{\eta}}
+      &= -\log\pn{\mu_K} \\
+      &= \log\pn{\frac{1}{\mu_K}} \\
+      &= 1 + \sum_{i=1}^{K-1}e^{\eta_i}
+    \end{align*}
+    we see
+    \begin{align*}
+      \mrm{Cat}\pn{\vx \mid \bm{\mu}}
+      &= h(\vx) \pn{\bm{\eta}^\T T(\vx) - A(\bm{\eta})}
+    \end{align*}
+    where $\bm{\eta}$ is the softmax of $\bm{\mu}$.
 \end{document}
