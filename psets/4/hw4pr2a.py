@@ -74,6 +74,8 @@ def grad_logreg(X, y, W, reg=0.0):
     NOTE: Please use the variable given for the gradient, grad.
     """
 
+    grad = X.T @ (sigmoid(X @ W) - y) + reg * W
+
     return grad
 
 
@@ -102,12 +104,11 @@ def NLL(X, y, W, reg=0.0):
     NOTE: please use the variable given for the final returned result,
     nll.
     """
-    # TODO: Find the negative log likelihood of logistic regression
-    "*** YOUR CODE HERE ***"
+    mu = sigmoid(X @ W)
+    nll = -1 * sum(np.multiply(y, np.log(mu)) + np.multiply((1-y),
+    np.log(1-mu))) + (reg/2) * (np.linalg.norm(W))**2
 
-
-    "*** END YOUR CODE HERE ***"
-    return nll
+    return nll.item(0)
 
 
 
@@ -125,7 +126,7 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
     This function returns W, the optimal weight by gradient descent,
     and nll_list, the corresponding learning objectives.
     """
-    # get the shape of the data, and initiate nll list
+    # get the shape of the data, and initialize nll list
     m, n = X.shape
     nll_list = []
 
@@ -158,15 +159,23 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 
     while iter_num < max_iter and np.linalg.norm(W_grad) > eps:
 
-        "*** YOUR CODE HERE ***"
+        nll = NLL(X, y, W, reg=reg)
+
+        # Check to see if things are up the creek
+        if np.isnan(nll):
+            break
+
+        # phew
+        nll_list += [nll]
 
 
-        "*** END YOUR CODE HERE ***"
+        W_grad = grad_logreg(X, y, W, reg=reg)
+        W -= lr * W_grad
 
         # Print statements for debugging
         if (iter_num + 1) % print_freq == 0:
-            print('-- Iteration {} - negative log likelihood {: 4.4f}'.format(\
-                    iter_num + 1, nll))
+            print('-- Iteration {} - negative log likelihood {: 4.4f}'
+                  .format(iter_num + 1, nll))
 
         # Goes to the next iteration
         iter_num += 1
@@ -174,8 +183,8 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 
     # benchmark
     t_end = time.time()
-    print('-- Time elapsed for running gradient descent: {t:2.2f} seconds'.format(\
-            t = t_end - t_start))
+    print('-- Time elapsed for running gradient descent:'
+          ' {t:2.2f} seconds'.format(t = t_end - t_start))
 
     return W, nll_list
 
@@ -184,6 +193,7 @@ def grad_descent(X, y, reg=0.0, lr=1e-4, eps=1e-6, max_iter=500, print_freq=20):
 #########################
 #        Step 1a`        #
 #########################
+
 
 def newton_step(X, y, W, reg=0.0):
     """
@@ -198,22 +208,30 @@ def newton_step(X, y, W, reg=0.0):
 
     HINT: get the result following the steps below
         1) Calculate the gradient of log likelihood, grad, with
-        respect to W
+           respect to W
         2) Use np.diag to create a diagonal matrix, with mu*(1-mu)
-        being the entries on the diagonal
+           being the entries on the diagonal
         3) Calculate the Hessian matrix, H, of logistic regression
-        following the equation (you will need to use the diagonal
-        matrix created)
+           following the equation (you will need to use the diagonal
+           matrix created)
         4) Using np.linalg.solve to solve for d in the equation Hd =
-        -grad
+           -grad
 
     NOTE: Please use the variable given for final returned result, d.
     """
-    # TODO: Find the change of the weight according Newton's methods
-    "*** YOUR CODE HERE ***"
 
+    # calculate the gradient
+    grad = grad_logreg(X, y, W, reg=reg)
 
-    "*** END YOUR CODE HERE ***"
+    # calculate the hessian
+    H = X.T @ \
+        np.diag(np.squeeze([mu*(1-mu) for mu in [sigmoid(W.T @ x) for x in X]]))\
+        @ X
+    H += reg * np.eye(X.shape[1])
+
+    # Solve for the thingy
+    d = np.linalg.solve(H, grad)
+
     return d
 
 
@@ -257,15 +275,19 @@ def newton_method(X, y, reg=0.0, eps=1e-6, max_iter=20, print_freq=5):
 
     while iter_num < max_iter and np.linalg.norm(step) > eps:
 
-        "*** YOUR CODE HERE ***"
+        nll = NLL(X, y, W, reg=reg)
 
+        if np.isnan(nll):
+            break
 
-        "*** END YOUR CODE HERE ***"
+        nll_list += [nll]
+
+        W -= newton_step(X, y, W, reg=reg)
 
         # Print statements for debugging
         if (iter_num + 1) % print_freq == 0:
-            print('-- Iteration {} - negative log likelihood {: 4.4f}'.format(\
-                    iter_num + 1, nll))
+            print('-- Iteration {} - negative log likelihood '
+                  '{: 4.4f}'.format(iter_num + 1, nll))
 
         # Goes to the next iteration
         iter_num += 1
@@ -274,8 +296,8 @@ def newton_method(X, y, reg=0.0, eps=1e-6, max_iter=20, print_freq=5):
 
     # benchmark
     t_end = time.time()
-    print('-- Time elapsed for running Newton\'s method: {t:2.2f} seconds'.format(\
-            t = t_end - t_start))
+    print('-- Time elapsed for running Newton\'s method: {t:2.2f} '
+          'seconds'.format(t = t_end - t_start))
 
     return W, nll_list
 
@@ -323,10 +345,33 @@ def get_description(X, y, W):
     NOTE: Please use the variable given for final returned results.
     """
     # TODO: Find the accuracy, precision, recall, and f-1 score of the prediction
-    "*** YOUR CODE HERE ***"
 
+    predictions = predict(X, W)
 
-    "*** END YOUR CODE HERE ***"
+    total = X.shape[0]
+
+    a_ct, p_ct, r_ct = 0, 0, 0
+    p_tot = 0
+    r_tot = 0
+    for i in range(X.shape[0]):
+        actual, predicted = y.item(i), predictions.item(i)
+        if actual == predicted:
+            a_ct += 1
+        if actual == 1:
+            r_tot += 1
+            if predicted == 1:
+                r_ct += 1
+        if predicted == 1:
+            p_tot += 1
+            if actual == 1:
+                p_ct += 1
+
+    accuracy = 1. * a_ct / total
+    precision = 1. * p_ct / p_tot
+    recall = 1. * r_ct / r_tot
+
+    f1 = 2 * precision * recall / (precision + recall)
+
     return accuracy, precision, recall, f1
 
 
@@ -343,7 +388,8 @@ def plot_description(X_train, y_train, X_test, y_test):
     This function plots the accuracy/precision/recall/F-1 score versus
     lambda and returns the lambda that maximizes accuracy.
     """
-    reg_list = []
+    reg_list = np.linspace(0, 30, num=100)
+
     a_list = []
     p_list = []
     r_list = []
@@ -359,11 +405,15 @@ def plot_description(X_train, y_train, X_test, y_test):
     #     3) Get accuracy, precision, recall and f1 with the data and
     #     W_opt obtained, and append those into the corresponding list
 
-    "*** YOUR CODE HERE ***"
+    for i in range(len(reg_list)):
+        W_opt, obj = grad_descent(X_train, y_train, reg=reg_list[i],\
+                                  lr=2e-4, print_freq=100)
+        acc, prec, recall, f1 = get_description(X_test, y_test, W_opt)
 
-
-    "*** END YOUR CODE HERE ***"
-
+        a_list.append(acc)
+        p_list.append(prec)
+        r_list.append(recall)
+        f1_list.append(f1)
 
     # Generate plots
     # plot accurary versus lambda
