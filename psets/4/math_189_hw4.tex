@@ -225,5 +225,64 @@
   \hrulefill
 
   \section*{Solution:}
-
+    \begin{enumerate}
+      \item For the logistic model, we have the same equation as
+        previously, just with a regularization term added in:
+        \begin{align*}
+          \mrm{NLL}(\bm{\theta})
+          &= \sum_{i=1}^N \bk{y_i \log\pn{\sigma\pn{\bm{\theta}^T
+            \vx_i}} + (1-y^{(i)})\log\pn{1- \sigma\pn{\bm{\theta}^\T
+            \vx_i}}} + \lambda \norm{\bm{\theta}}_2^2
+        \end{align*}
+        \begin{align*}
+          \nabla_{\bm{\theta}} \mrm{NLL}\pn{\bm{\theta}}
+          &= -\sum_{i=1}^N \bk{y^{(i)}\pn{1-\sigma\pn{\bm{\theta}^\T
+            \vx_i}}\vx_i - (1-y^{(i)}) \sigma\pn{\bm{\theta}^\T
+            \vx_i}\vx_i} + 2\lambda \bm{\theta} \\
+          &= -\sum_{i=1}^N \bk{y^{(i)} - \sigma\pn{\bm{\theta}^\T
+            \vx_i}} \vx_i + 2 \lambda \bm{\theta} \\
+          &= -X^\T \pn{\vy - \sigma \pn{X\bm{\theta}}} + 2\lambda
+            \bm{\theta} \\
+          &= X^\T \pn{\sigma \pn{X\bm{\theta}} - \vy} + 2\lambda
+            \bm{\theta} \\
+        \end{align*}
+        the hessian is then
+        \begin{align*}
+          H
+          &= \nabla^2 \mrm{NLL}(\bm{\theta}) \\
+          &= \nabla \pn{\sum_{i=1}^N \bk{y^{(i)} -
+            \sigma\pn{\bm{\theta}^\T \vx_i}}\vx_i +
+            2\lambda\bm{\theta}}^\T \\
+          &= \sum_{i=1}^N \bk{\pn{\sigma\pn{\bm{\theta}^\T
+            \vx}\vx_i}^\T \vx_i} + 2\lambda I\\
+          &= X^\T \diag\pn{\mu_1 \pn{1- \mu_1}, \ldots,
+            \mu_n\pn{1-\mu_n}} X + 2\lambda I
+        \end{align*}
+        where $\mu_i = \sigma\pn{\bm{\theta}^\T\vx_i}$
+      \item We calculate the gradient of the softmax stuff. Our model
+        is
+        \begin{align*}
+          p\pn{y = c \mid \vx, \bW}
+          &= \frac{\exp\pn{\bW_c^\T \vx}}{\sum_{c'=1}^C
+            \exp\pn{\bW_{c'}^\T \vx}}
+        \end{align*}
+        let $\mu_{ic} = p\pn{y_i = c \mid \vx_i, \bW} =
+        \mc{S}\pn{\bm{\eta_i}}_c$, where $\bm{\eta}_i = \bW^\T \vx_i$.
+        Also, let $y_{ic} = \mathbb{I}\pn{y_i = c}$. Let $\vw_C = 0$.
+        Hence our one-line log-likelihood equation is
+        \begin{align*}
+          \mrm{NLL}\pn{\bW}
+          &= -\log \pn{\prod_{i=1}^N \prod_{c=1}^C \mu_{ic}^{y_{ic}}}
+            + \lambda \norm{\bW}_F \\
+          &= \sum_{i=1}^N \sum_{c=1}^C y_{ic} \log\pn{\mu_{ic}} +
+            \lambda \tr\pn{\bW^\T \bW}
+        \end{align*}
+        hence
+        \begin{align*}
+          \nabla \mrm{NLL}\pn{\bW}
+          &= \sum_{i=1}^N \sum_{c=1}^C y_{ic} \pn{1 -
+            \mc{S}\pn{\bm{\eta}_i}_c} \vx_i^\T + \lambda \bW \\
+          &= X^\T \pn{\bm{\mu} - \bm{y}} + \lambda \bW
+        \end{align*}
+    \end{enumerate}
 \end{document}

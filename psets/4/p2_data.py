@@ -5,8 +5,8 @@ This file is used to load and process data for problem 2, and is imported
 
 Note:
 1. Please DO NOT change anything in this file.
-2. Although these codes are given, please read carefully through the file, and
-   make sure you understand how these codes work.
+2. Although these codes are given, please read carefully through the
+file, and make sure you understand how these codes work.
 """
 import pandas as pd
 import numpy as np
@@ -14,7 +14,8 @@ import numpy as np
 
 print('==>Loading data...')
 
-# create the headers for data frame since original data dodes not have headers
+# create the headers for data frame since original data dodes not have
+# headers
 name_list = ['pix_{}'.format(i + 1) for i in range(784)]
 name_list = ['label'] + name_list
 
