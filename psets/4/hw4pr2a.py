@@ -388,7 +388,7 @@ def plot_description(X_train, y_train, X_test, y_test):
     This function plots the accuracy/precision/recall/F-1 score versus
     lambda and returns the lambda that maximizes accuracy.
     """
-    reg_list = np.linspace(0, 30, num=100)
+    reg_list = np.linspace(0, 30, num=10)
 
     a_list = []
     p_list = []
@@ -444,12 +444,8 @@ def plot_description(X_train, y_train, X_test, y_test):
 
     print('==> Plotting completed.')
 
+    reg_opt = reg_list[np.argmax(a_list)]
 
-    # TODO: Find the lambda, reg_opt, that maximizes accuracy
-    "*** YOUR CODE HERE ***"
-
-
-    "*** END YOUR CODE HERE ***"
     return reg_opt
 
 
