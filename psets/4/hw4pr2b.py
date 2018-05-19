@@ -36,7 +36,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder
 import time
 
-def softmax(X,W):
+def softmax(X, W):
     exp_mu = np.exp(X @ W)
     return exp_mu / exp_mu.sum(axis=1).reshape(-1, 1)
 
@@ -89,7 +89,6 @@ def grad_softmax(X, y, W, reg=0.0):
     NOTE: Please use the variable given for the gradient, grad.
     """
 
-    exp_mu = np.exp(X @ W)
     grad = X.T @ ((softmax(X, W)) - y) + reg * W
 
     return grad
@@ -112,11 +111,7 @@ def predict(X, W):
 
     NOTE: Please use the variable given, y_pred.
     """
-    # TODO: Obtain the array of predicted label y_pred using X, and
-    # Weight given
-
-    exp_mu = np.exp(X @ W)
-    y_pred = np.argmax(softmax(X, W))
+    y_pred = np.argmax(softmax(X, W), axis=1).reshape(-1, 1)
 
     return y_pred
 
@@ -169,25 +164,6 @@ def grad_descent(X, y, reg=0.0, lr=1e-5, eps=1e-6,
     iter_num = 0
     t_start = time.time()
 
-    # TODO: run gradient descent algorithms
-
-    # HINT: Run the gradient descent algorithm followed steps below
-    #    1) Calculate the negative log likelihood at each iteration
-    #       use function NLL defined above
-    #    2) Use np.isnan to test element-wise for NaN in obtained nll.
-    #       If isnan, break out of the while loop
-    #    3) Otherwise, append the nll to the nll_list
-    #    4) Calculate the gradient for W using grad_softmax defined
-    #       above
-    #    5) Upgrade W
-    #    6) Keep iterating while the number of iterations is less than
-    #       the maximum and the gradient is larger than the threshold
-
-    # NOTE: When calculating negative log likelihood at each
-    #       iteration, please use variable name nll to store the
-    #       value. Otherwise, there might be error when you run the
-    #       code.
-
     while iter_num < max_iter and np.linalg.norm(W_grad) > eps:
 
         nll = NLL(X, y, W, reg=reg)
@@ -212,7 +188,6 @@ def grad_descent(X, y, reg=0.0, lr=1e-5, eps=1e-6,
     t_end = time.time()
     print('-- Time elapsed for running gradient descent: {t:2.2f}'
           ' seconds'.format(t=t_end - t_start))
-
     return W, nll_list
 
 
@@ -242,17 +217,13 @@ def accuracy_vs_lambda(X_train, y_train_OH, X_test, y_test, lambda_list):
     # initialize the list of accuracy
     accu_list = []
 
-    # TODO: Find corresponding accuracy values for each parameter
-
     for reg in lambda_list:
 
         W, nll_list = grad_descent(X_train, y_train_OH, reg=reg,
-                                   lr=2e-5, print_freq=50)
-
+                                   lr=2e-5, print_freq=50, max_iter=50)
         y_pred = predict(X_test, W)
         accuracy = get_accuracy(y_pred, y_test)
         accu_list += [accuracy]
-
         print('-- Accuracy is {:2.4f} for lambda = {:2.2f}'
               .format(accuracy, reg))
 
@@ -268,9 +239,6 @@ def accuracy_vs_lambda(X_train, y_train_OH, X_test, y_test, lambda_list):
     plt.close()
     print('==> Plotting completed.')
 
-
-    # TODO: Find the optimal lambda that maximizes the accuracy
-    # NOTE: use the variable given, reg_opt
     reg_opt = lambda_list[np.argmax(accu_list)]
 
     return reg_opt
