@@ -44,7 +44,7 @@
       &= \frac{\sum_i r_{ik}\vx_i}{r_k} \\
       \bm{\Sigma}_k
       &= \frac{1}{r_k}\sum_i r_{ik}(\vx_i - \bm{\mu}_k)(\vx_i -
-        \bm{\mu}_k)^\T
+        \bm{\mu}_k)^\T \\
       &= \frac{1}{r_k} \sum_i r_{ik}\vx_i\vx_i^\T - r_k\bm{\mu}_k
         \bm{\mu}_k^\T.
     \end{align*}
@@ -52,7 +52,70 @@
   \hrulefill
 
   \section*{Solution:}
+    % Our EM algorithm can be described as follows:
+    % \begin{enumerate}[label=\arabic*.]
+    %   \item Repeat the following until convergence:
+    %   \item (E-step) $\forall i$, $Q_i \pn{z^{(i)}} \coloneqq
+    %     p(z^{(i)} \mid x^{(i)}; \theta)$
+    %   \item (M-step) set
+    %     \[
+    %       \theta \coloneqq \argmax_{\theta} \sum_i \sum_{z^(i)}
+    %       Q_i(z^{(i)}) \log \pn{\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_i
+    %           (z^{(i)})}}
+    %     \]
+    %     where $Q_i(z)$ is
+    %   \end{enumerate}
 
+    In the M-step, we want to optimize
+    \begin{align*}
+      \ell(\bm{\mu}_k, \bm{\Sigma}_k )
+      &= \sum_k \sum_i r_{ik} \log p(\vx_i \mid \bm{\theta}_k) \\
+      &= -\frac{1}{2} \sum_i r_{ik} \bk{\log \abs{\Sigma_k} + (\vx_i -
+        \bm{\mu}_k)^\T \bm{\Sigma}_k^{-1} (\vx_i - \bm{\mu}_k)}
+    \end{align*}
+    we first calculate the optimal $\bm{\mu}_k$:
+    \begin{align*}
+      \pd{\ell(\bm{\mu}_k, \bm{\Sigma}_k)}{\bm{\mu}_k}
+      &= -\frac{1}{2} \sum_i -2r_{ik} \bm{\Sigma}_k^{-1} (\vx_i -
+        \bm{\mu}_k) \\
+      &= \sum_i r_{ik} \bm{\Sigma}_k^{-1} (\vx_i - \bm{\mu}_k) \\
+      &= 0
+    \end{align*}
+    thus
+    \begin{align*}
+      \sum_i r_{ik} \bm{\Sigma}_k^{-1} \vx_i
+      &= \sum_i r_{ik} \bm{\Sigma}_k^{-1} \bm{\mu}_k \\
+      \sum_i r_{ik} \vx_i
+      &= \sum_i r_{ik} \bm{\mu}_k \\
+      \boxed{\frac{\sum_i r_{ik} \vx_i}{\sum_i r_{ik}}}
+      &= \bm{\mu}_k
+    \end{align*}
+    as desired. Note that
+    \[
+      \pd{\va^\T \bX^{-1}\vb}{\bX} = -\bX^{-\T} \va \vb^\T \bX^{-\T}
+    \]
+    Hence, differentiating with respect to $\bm{\Sigma}_k$, we have
+    \begin{align*}
+      \pd{\ell(\bm{\mu_k}, \bm{\Sigma}_k)}{\bm{\Sigma}_k}
+      &= -\frac{1}{2} \sum_i r_{ik} \bk{\bm{\Sigma}_k^{-\T}
+        -\bm{\Sigma}_k^{-\T} \pn{\vx_i - \bm{\mu}_k} \pn{\vx_i -
+        \bm{\mu}_k}^{\T} \bm{\Sigma}_k^{-\T}} \\
+      &= -\frac{1}{2} \sum_i r_{ik} \bk{\bm{\Sigma}_k^{-1} -
+        \Sigma^{-1}_k (\vx_i - \bm{\mu}_k)(\vx_i - \bm{\mu}_k)^{\T}
+        \bm{\Sigma}_k^{-1}}
+    \end{align*}
+    and so
+    \begin{align*}
+      \sum_i r_{ik} \bm{\Sigma}_k^{-1}
+      &= \sum_i r_{ik} \bm{\Sigma}_k^{-1} (\vx_i - \bm{\mu}_k)(\vx_i -
+        \bm{\mu}_k)^{\T} \bm{\Sigma}_k^{-1} \\
+      \sum_i r_{ik}
+      &= \sum_i r_{ik} \bm{\Sigma}_k^{-1} (\vx_i - \bm{\mu}_k)(\vx_i -
+        \bm{\mu}_k)^{\T} \\
+      \bm{\Sigma}_k
+      &= \frac{\sum_i r_{ik} (\vx_i - \bm{\mu}_k)(\vx_i -
+        \bm{\mu}_k)^{\T}}{\sum_i r_{ik}}
+    \end{align*}
   \clearpage
 
 % --------------------------- Problem 2 ---------------------------- %
