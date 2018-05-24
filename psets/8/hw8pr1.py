@@ -43,87 +43,113 @@ import time
 #########################################
 
 def k_means(X, k, eps=1e-10, max_iter=1000, print_freq=10):
-    """    This function takes in the following arguments:
-            1) X, the data matrix with dimension m x n
-            2) k, the number of clusters
-            3) eps, the threshold of the norm of the change in clusters
-            4) max_iter, the maximum number of iterations
-            5) print_freq, the frequency of printing the report
+    """
+    This function takes in the following arguments:
+        1) X, the data matrix with dimension m x n
+        2) k, the number of clusters
+        3) eps, the threshold of the norm of the change in clusters
+        4) max_iter, the maximum number of iterations
+        5) print_freq, the frequency of printing the report
 
-        This function returns the following:
-            1) clusters, a list of clusters with dimension k x 1
-            2) label, the label of cluster for each data with dimension m x 1
-            3) cost_list, a list of costs at each iteration
+    This function returns the following:
+        1) clusters, a list of clusters with dimension k x 1
+        2) label, the label of cluster for each data with dimension m x 1
+        3) cost_list, a list of costs at each iteration
 
-        HINT:
-            1) Use np.argsort to get the index of the sorted array
-            2) Use copy.deepcopy(A) to make a deep copy of an object A
-            3) Calculate cost with k_means_cost()
-            2) Each iteration consists of two steps:
-                a) finding the closest center for each data point
-                b) update the centers according to the data points
+    HINT:
+        1) Use np.argsort to get the index of the sorted array
+        2) Use copy.deepcopy(A) to make a deep copy of an object A
+        3) Calculate cost with k_means_cost()
+        4) Each iteration consists of two steps:
+            a) finding the closest center for each data point
+            b) update the centers according to the data points
 
-        NOTE:
-            1) We use l2-norm as the distance metric
+    NOTE:
+        1) We use l2-norm as the distance metric
     """
     m, n = X.shape
     cost_list = []
     t_start = time.time()
     # randomly generate k clusters
-    clusters = np.random.multivariate_normal((.5 + np.random.rand(n)) * X.mean(axis=0), 10 * X.std(axis=0) * np.eye(n), \
-        size=k)
+    clusters = np.random.multivariate_normal((.5 + np.random.rand(n))
+        * X.mean(axis=0), 10 * X.std(axis=0) * np.eye(n), size=k)
     label = np.zeros((m, 1)).astype(int)
     iter_num = 0
 
     while iter_num < max_iter:
+        prev_clusters = copy.deepcopy(clusters)
 
         # TODO: Implement k-means algorithm
-        "*** YOUR CODE HERE ***"
+        for i in range(m):
+            data = X[i, :]
+            diff = data - clusters
+            curr_label = np.argsort(np.linalg.norm(diff, axis=1)).item(0)
+            label[i] = curr_label
+
+            # norm_list = [(np.linalg.norm(X[i, :] - centroid))**2 for
+            #              centroid in clusters]
+            # norm_array = np.array(norm_list)
+            # sorted_norms = np.argsort(norm_array)
+            # label[i] = sorted_norms.item(0)
+
+        for i in range(k):
+            ind = np.where(label == i)[0]
+            if len(ind) > 0:
+                clusters[i, :] = X[ind].mean(axis=0)
+            # new_centroid = np.zeros_like(clusters[0])
+            # num_pts = 0
+            # for j in range(len(label)):
+            #     if label[j] == i:
+            #         new_centroid += X[i, :]
+            #         num_pts += 1
+            # if num_pts > 0:
+            #     clusters[i, :] = new_centroid / num_pts
 
 
-        "*** END YOUR CODE HERE ***"
 
         # TODO: Calculate cost and append to cost_list
-        "*** YOUR CODE HERE ***"
-
-
-        "*** END YOUR CODE HERE ***"
+        cost = k_means_cost(X, clusters, label)
+        cost_list.append(cost)
 
         if (iter_num + 1) % print_freq == 0:
-            print('-- Iteration {} - cost {:4.4E}'.format(iter_num + 1, cost))
+            print('-- Iteration {} - cost {:4.4E}'.format(iter_num+
+                                                          1, cost))
         if np.linalg.norm(prev_clusters - clusters) <= eps:
-            print('-- Algorithm converges at iteration {} \
-                with cost {:4.4E}'.format(iter_num + 1, cost))
+            print('-- Algorithm converges at iteration {} with cost '
+                  '{:4.4E}'.format(iter_num + 1, cost))
             break
         iter_num += 1
 
     t_end = time.time()
-    print('-- Time elapsed: {t:2.2f} \
-        seconds'.format(t=t_end - t_start))
+    print('-- Time elapsed: {t:2.2f} seconds'.format(t=t_end-t_start))
     return clusters, label, cost_list
 
 def k_means_cost(X, clusters, label):
-    """    This function takes in the following arguments:
-            1) X, the data matrix with dimension m x n
-            2) clusters, the matrix with dimension k x 1
-            3) label, the label of the cluster for each data point with
-                dimension m x 1
+    """
+    This function takes in the following arguments:
+        1) X, the data matrix with dimension m x n
+        2) clusters, the matrix with dimension k x 1
+        3) label, the label of the cluster for each data point with
+           dimension m x 1
 
-        This function calculates and returns the cost for the given data
-        and clusters.
+        This function calculates and returns the cost for the given
+        data and clusters.
 
-        NOTE:
-            1) The total cost is defined by the sum of the l2-norm difference
-            between each data point and the cluster center assigned to this data point
+    NOTE:
+        1) The total cost is defined by the sum of the l2-norm
+           difference between each data point and the cluster center
+           assigned to this data point
     """
     m, n = X.shape
     k = clusters.shape[0]
 
-    # TODO: Calculate the total cost
-    "*** YOUR CODE HERE ***"
+    X_cluster = clusters[label.flatten()]
+    cost = (np.linalg.norm(X - X_cluster, axis=1)**2).sum()
 
+    # cost = 0.0
+    # for i in range(m):
+    #     cost += (np.linalg.norm(X[i] - clusters[label[i]]))**2
 
-    "*** END YOUR CODE HERE ***"
     return cost
 
 
@@ -156,35 +182,35 @@ if __name__ == '__main__':
     print('==> Step 1: Finding optimal number of clusters...')
     cost_k_list = []
     for k in range(1, 21):
-        # TODO: Get the clusters, labels, and cost list for different k values
-        "*** YOUR CODE HERE ***"
-
-
-        "*** END YOUR CODE HERE ***"
+        # TODO: Get the clusters, labels, and cost list for different
+        # k values
+        clusters, label, cost_list = k_means(X, k)
         cost = cost_list[-1]
         cost_k_list.append(cost)
-        print('-- Number of clusters: {} - cost: {:.4E}'.format(k, cost))
+        print('-- Number of clusters: {} - cost: {:.4E}'.format(k,\
+        cost))
 
     opt_k = np.argmin(cost_k_list) + 1
     print('-- Optimal number of clusters is {}'.format(opt_k))
 
     # TODO: Generate plot of cost vs k
-    "*** YOUR CODE HERE ***"
-
-
-    "*** END YOUR CODE HERE ***"
+    plt.plot(range(1, 21), cost_k_list, 'g^')
+    plt.plot(opt_k, min(cost_k_list), 'rD')
 
     plt.title('Cost vs Number of Clusters')
     plt.savefig('kmeans_1.png', format='png')
     plt.close()
 
     # =============STEP 1c: VISUALIZATION=================
-    # TODO: Generate visualization on running k-means on the optimal k value
+    # TODO: Generate visualization on running k-means on the optimal k
+    # value
     # NOTE: Be sure to mark the cluster centers from the data point
-    "*** YOUR CODE HERE ***"
 
+    clusters, label, cost_list = k_means(X, opt_k)
+    pt_cluster = clusters[label.flatten()]
+    data_plot = plt.plot(X[:, 0], X[:, 1], "bo", markersize=1)
+    center_plot = plt.plot(clusters[:, 0], clusters[:, 1], "g^")
 
-    "*** END YOUR CODE HERE ***"
 
     # set up legend and save the plot to the current folder
     plt.legend((data_plot, center_plot), \

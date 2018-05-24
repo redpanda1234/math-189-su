@@ -32,6 +32,8 @@
 
 \lfoot{Due Thursday, May 24th 2018}
 
+\usepackage{hyperref}
+
 \begin{document}
 
 % --------------------------- Problem 1 ---------------------------- %
@@ -80,8 +82,18 @@
   \hrulefill
 
   \section*{Solution:}
-  \begin{enumerate}
-  \end{enumerate}
+  \begin{figure}[H]
+    \centering
+    \includegraphics{kmeans_1.png}
+    \caption{K-means}
+    \label{fig:k-means}
+  \end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics{kmeans_2.png}
+    \caption{K-means}
+    \label{fig:k-means}
+  \end{figure}
 
   \clearpage
 
@@ -114,7 +126,7 @@
     generative process:
     \begin{enumerate}[label=\arabic*.]
       \item Draw $\vw \sim \cN(\0, \mb{V}_0)$
-      \item Draw $\yy_i \sim \cN(\vw^\T\vx_i, \sigma^2)$ for
+      \item Draw $\vy_i \sim \cN(\vw^\T\vx_i, \sigma^2)$ for
         $i=1,2,\dots,n$ where $\sigma^2$ is known.
     \end{enumerate}
     Express this model as a directed graphical model using Plate
