@@ -41,71 +41,71 @@ import time
 #             Helper Functions            #
 #########################################
 def find_cost(X, y, W , reg):
-    """    This function takes in three arguments:
-            1) W, a weight matrix with bias
-            2) X, the data with dimension m x (n + 1)
-            3) y, the label of the data with dimension m x 1
-
-        This function calculates and returns the l1 regularized
-        mean-squared error
     """
-    # TODO: Solve for l1-regularized mse
-    "*** YOUR CODE HERE ***"
+    This function takes in three arguments:
+        1) W, a weight matrix with bias
+        2) X, the data with dimension m x (n + 1)
+        3) y, the label of the data with dimension m x 1
 
-
-    "*** END YOUR CODE HERE ***"
+    This function calculates and returns the l1 regularized
+    mean-squared error
+    """
+    error = X @ W - y
+    cost = float(error.T @ error) + reg * np.linalg.norm(W, ord=1)
+    cost /= len(y)
     return cost
 
 def find_grad(X, y, W, reg=0.0):
-    """    This function takes in four arguments:
-            1) X, the data with dimension m x (n + 1)
-            2) y, the label of the data with dimension m x 1
-            3) W, a weight matrix with bias
-            4) reg, the parameter for regularization
-
-        This function calculates and returns the gradient of W
     """
-    # TODO: Find the gradient of lasso with respect to W
-    "*** YOUR CODE HERE ***"
+    This function takes in four arguments:
+        1) X, the data with dimension m x (n + 1)
+        2) y, the label of the data with dimension m x 1
+        3) W, a weight matrix with bias
+        4) reg, the parameter for regularization
 
+    This function calculates and returns the gradient of W
+    """
+    grad = X.T @ (X @ W - y) / X.shape[0]
 
-    "*** END YOUR CODE HERE ***"
     return grad
 
 def prox(X, gamma):
-    """ This function takes in two arguments:
-            1)  X, a vector
-            2) gamma, a scalar
-
-        This function thresholds each entry of X with gamma
-        and updates the changes in place.
-
-        Hint:
-            1) Use X > gamma to find the index of entries in X
-                that are greater than gamma
     """
-    # TODO: Threshold each entry of X with respect to gamma
-    """*** YOUR CODE HERE ***"""
+    This function takes in two arguments:
+        1) X, a vector
+        2) gamma, a scalar
 
+    This function thresholds each entry of X with gamma and updates
+    the changes in place.
 
-    """*** END YOUR CODE HERE ***"""
+    Hint:
+        1) Use X > gamma to find the index of entries in X that are
+           greater than gamma
+    """
+    # I forgot you could use boolean arrays to iterate in numpy. Cool!
+    # The following is a verbatim copy of the solutions, because I
+    # liked the method so much.
+    X[np.abs(X) <= gamma] = 0.0
+    X[X > gamma] -= gamma
+    X[X < -gamma] += gamma
     return X
 
 def grad_lasso(
     X, y, reg=1e6, lr=1e-12, eps=1e-5,
     max_iter=300, batch_size=256, print_freq=1):
-    """ This function takes in the following arguments:
-            1) X, the data with dimension m x (n + 1)
-            2) y, the label of the data with dimension m x 1
-            3) reg, the parameter for regularization
-            4) lr, the learning rate
-            5) eps, the threshold of the norm for the gradients
-            6) max_iter, the maximum number of iterations
-            7) batch_size, the size of each batch for gradient descent
-            8) print_freq, the frequency of printing the report
+    """
+    This function takes in the following arguments:
+        1) X, the data with dimension m x (n + 1)
+        2) y, the label of the data with dimension m x 1
+        3) reg, the parameter for regularization
+        4) lr, the learning rate
+        5) eps, the threshold of the norm for the gradients
+        6) max_iter, the maximum number of iterations
+        7) batch_size, the size of each batch for gradient descent
+        8) print_freq, the frequency of printing the report
 
-        This function returns W, the optimal weight,
-        by lasso gradient descent.
+    This function returns W, the optimal weight, by lasso gradient
+    descent.
     """
     m, n = X.shape
     obj_list = []
@@ -117,22 +117,14 @@ def grad_lasso(
     iter_num = 0
     t_start = time.time()
 
-    # TODO: Run gradient descent
-
-    # HINT:
-        # 1) Randomly select indices for entries into a batch using
-        #     np.random.randint()
-        # 2) Find the gradient using the batch
-        # 3) Apply the threshold function prox(), according to the problem
-        #     statement, to update W
-        # 4) Update the cost and append it to obj_list
-
     while iter_num < max_iter and np.linalg.norm(W_grad) > eps:
+        index = np.random.randint(0, m, size=batch_size)
+        W_grad = find_grad(X[index], y[index], W, reg=reg)
 
-        "*** YOUR CODE HERE ***"
+        W = prox(W - lr * W_grad, reg * lr)
 
-
-        "*** END YOUR CODE HERE ***"
+        cost = find_cost(X[index], y[index], W, reg=reg)
+        obj_list += [cost]
 
         if (iter_num + 1) % print_freq == 0:
             print('-- Iteration{} - training cost {: .4f} - \
@@ -147,14 +139,18 @@ def grad_lasso(
     return W, obj_list
 
 def lasso_path(X, y, tau_min=1e-8, tau_max=10, num_reg=10):
-    """ This function takes in the following arguments:
-            1) X, the data with dimension m x (n + 1)
-            2) y, the label of the data with dimension m x 1
-            3) tau_min, the minimum value for the inverse of regularization parameter
-            4) tau_max, the maximum value for the inverse of regularization parameter
-            5) num_reg, the number of regularization parameters
+    """
+    This function takes in the following arguments:
+        1) X, the data with dimension m x (n + 1)
+        2) y, the label of the data with dimension m x 1
+        3) tau_min, the minimum value for the inverse of
+           regularization parameter
+        4) tau_max, the maximum value for the inverse of
+           regularization parameter
+        5) num_reg, the number of regularization parameters
 
-        This function returns the list of optimal weights and the corresponding tau values.
+    This function returns the list of optimal weights and the
+    corresponding tau values.
     """
     m, n = X.shape
     W = np.zeros((n, num_reg)) # W has the shape n x num_reg
@@ -162,20 +158,9 @@ def lasso_path(X, y, tau_min=1e-8, tau_max=10, num_reg=10):
     for index in range(num_reg):
         reg = 1. / tau_list[index]
         print('--regularization parameter is {:.4E}'.format(reg))
-
-        # TODO: Threshold each entry of X with respect to gamma
-
-        # HINT:
-        #     1) Update each column of W to be the optimal weights at
-        #         each regularization parameter
-        #     2) Use A.flatten() to flatten an array A
-        #     3) Set the batch size to be 1024. Leave other default parameters
-        #         as they are.
-        """*** YOUR CODE HERE ***"""
-
-
-        """*** END YOUR CODE HERE ***"""
-
+        W[:, index] = grad_lasso(X, y, reg=reg, lr=1e-12,\
+                                 max_iter=1000, batch_size=1024,\
+                                 print_freq=1000)[0].flatten()
     return W, tau_list
 
 
@@ -196,8 +181,9 @@ if __name__ == '__main__':
     # =============STEP 0: LOADING DATA=================
     print('==> Step 0: Loading data...')
     # Read data
-    df = pd.read_csv('https://math189r.github.io/hw/data/online_news_popularity/online_news_popularity.csv', \
-        sep=', ', engine='python')
+    df = pd.read_csv('https://math189r.github.io/hw/data/'
+                     'online_news_popularity/online_news_popularity.csv',
+                     sep=', ', engine='python')
     X = df[[col for col in df.columns if col not in ['url', 'shares', 'cohort']]]
     y = np.log(df.shares).values.reshape(-1,1)
     X = np.hstack((np.ones_like(y), X))
@@ -235,10 +221,13 @@ if __name__ == '__main__':
         # 2) Use np.argsort() to sort the values on the first column of W
         #     in step 2
 
-    """*** YOUR CODE HERE ***"""
+    # Get the features and put them in an indexable array
+    features = np.array(df.columns)
 
-
-    """*** END YOUR CODE HERE ***"""
+    # Perform argsort on the first column of W, then take the first 5
+    # entries and account for an off-by-one error (features has an
+    # extra entry)
+    top_features = features[np.argsort(W[:, 0])[:5] + 1]
     print(top_features)
 
 
