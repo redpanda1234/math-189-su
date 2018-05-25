@@ -62,10 +62,12 @@ def nmf_cost(X, W, H):
 
     cost = 0.
     # TODO: Calculate the cost for nmf algorithm
-    "*** YOUR CODE HERE ***"
-
-
-    "*** END YOUR CODE HERE ***"
+    S = X.tocoo()
+    for i in range(len(S.data)):
+        row = S.row[i]
+        col = S.col[i]
+        data = S.data[i]
+        cost += ((data - W[row, :] @ H[:, col]).item(0))**2
     return cost
 
 def nmf(X, k=20, max_iter=100, print_freq=5):
@@ -89,10 +91,13 @@ def nmf(X, k=20, max_iter=100, print_freq=5):
     for iter_num in range(max_iter):
         # TODO: Update H and W according to the algorithm
         # Calculate cost and append to the list
-        "*** YOUR CODE HERE ***"
 
+        W = W * ((X @ H.T)/(W @ H @ H.T))
+        H = H * ((W.T @ X)/(W.T @ W @ H))
 
-        "*** END YOUR CODE HERE ***"
+        cost = nmf_cost(X, W, H)
+        cost_list.append(cost)
+
         if (iter_num + 1) % print_freq == 0:
             print('-- Iteration {} - cost: {:.4E}'.format(iter_num + 1, \
                 cost))
@@ -137,19 +142,11 @@ if __name__ == '__main__':
     # =============STEP 3: FIND MOST FREQUENT WORDS=================
     print('==> Finding most frequent words for each topic...')
     num_top_words = 10
-    '''
-        NOTE: This corresponds to the largest values of each row of H
-        HINT:
-                1) Use np.argsort to find the index of the sorted array
-                2) Use np.flip to flip the order of an array
-                3) ind should have the shape of k x num_top_words
-    '''
-    # TODO: Find the index of the most frequent words for each topic
-    "*** YOUR CODE HERE ***"
 
+    ind = np.flip(np.argsort(H, axis=1), 1)
 
-    "*** END YOUR CODE HERE ***"
     top_words = np.array(tfidf.get_feature_names())[ind]
     np.set_printoptions(threshold=np.nan)
     for topic_ind in range(H.shape[0]):
-        print('-- topic {}: {}'.format(topic_ind + 1, top_words[topic_ind, :num_top_words]))
+        print('-- topic {}: {}'.format(topic_ind + 1,\
+              top_words[topic_ind, :num_top_words]))
