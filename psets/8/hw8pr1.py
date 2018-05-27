@@ -42,7 +42,7 @@ import time
 #             Helper Functions            #
 #########################################
 
-def k_means(X, k, eps=1e-10, max_iter=1000, print_freq=10):
+def k_means(X, k, eps=1e-10, max_iter=1000, print_freq=1):
     """
     This function takes in the following arguments:
         1) X, the data matrix with dimension m x n
