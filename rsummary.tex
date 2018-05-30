@@ -1,0 +1,72 @@
+\documentclass[scipaper, 189]{pset}
+
+\title{READING SUMMARY}
+\author{Forest Kobayashi}
+\affiliation{Department of Mathematics, Harvey Mudd College,
+  Claremont, CA 91711}
+
+\begin{document}
+\begin{multicols}{2}
+  \large
+  Since the first paper I read turned out to be rather short, I decided
+  to read a second and provide a summary for it as well.
+  \section{Paper 1}
+  For my summary, I chose to read a paper that might help in finding
+  future directions for my project. I chose to examine
+  \textit{Frequency-based Analysis of Financial Time Series}, written
+  by Mohammad Hamed Izadi. In this paper, the author examines the
+  spectral density of stock prices and log stock prices, and finds
+  that their power spectral density is consistent with that predicted
+  by a random walk model ($S(f) \propto 1/f^2$).
+
+  First, the author gives a summary of previous work in the area,
+  referencing many papers that have also found ($S(f) \propto 1/f^2$).
+  Then, he performs his own analysis of some stock data, confirming
+  the results by performing a fit in $\gamma, C_0$ on $S(f) = C_0 /
+  f^\gamma$ for new datasets.
+
+  The author then shows that for a random walk process
+  \[
+    X_t = \mu + X_{t-1} + \varepsilon_t
+  \]
+  (where $\mu$ is a drift parameter, and the $\varepsilon_i$ are all
+  independent random variables), with some constraints, the power
+  spectral density must be of the form $1/f^2$. The author then goes
+  on to examine extracting correlation between low-frequency points in
+  sequences of the form $1/f^2$, as such sequences are not memoryless.
+  Thus, the author concludes, it might be possible to make some
+  predictions about stock prices.
+  \section{Paper 2}
+  For my second paper, I chose to read \textit{Dynamics of the Dow
+    Jones and the NASDAQ stock indexes}, by Fernando B.\ Duarte, J.\
+  A.\ Tenreiro machado, and Gon\c{c}alo Monteiro Duarte. In this
+  paper, the authors analyze the properties of financial data using
+  techniques from dynamical systems. In particular, they use Takens'
+  embedding theorem to determine whether a time series is ``a
+  deterministic signal from a low-dimensional dynamical system.'' They
+  state the theorem as follows:
+  \begin{theorem}
+    If a time series is one component of an attractor that can be
+    represented by a smooth $d$-dimensional manifold (where $d \in
+    \ZZ$), then the topological properties of the signal are
+    equivalent to the topological properties of the embedding formed
+    by the $m$-dimensional phase space vectors
+    \[
+      y(t) = \bk{s(t), s(t + \tau), s(t + 2\tau), \cdots, s(t +
+        (m-1)\tau)}
+    \]
+    whenver $m > 2d + 1$. The vector $y(t)$ can be plotted in a
+    $d$-dimensional space forming a curve in the Pseudo Phase Space.2
+  \end{theorem}
+  In the particular case of stock data, the authors use power
+  functions to approximate the modulus of the fourier transform
+  amplitudes, as a method for studying signal spectrums:
+  \[
+    \abs{\mc{F}\set{x(t)}} \cong p \omega^q \qquad p,q \in \RR
+  \]
+  then, the authors use a sliding-window Fourier Transform (to try and
+  keep both time and frequency information), and then applied
+  Pseudo Phase Plane analysis to calculate relationships between
+  different time partitions for a stock.
+\end{multicols}
+\end{document}
